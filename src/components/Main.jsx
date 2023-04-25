@@ -1,36 +1,7 @@
-import {
-  createStyles,
-  Badge,
-  Group,
-  Title,
-  Text,
-  Card,
-  SimpleGrid,
-  Container,
-  rem,
-} from "@mantine/core";
+import { createStyles, Badge, Container, rem, Table } from "@mantine/core";
+import { useState, useEffect } from "react";
 import { IconGauge, IconUser, IconCookie } from "@tabler/icons-react";
-
-const mockdata = [
-  {
-    title: "Extreme performance",
-    description:
-      "This dust is actually a powerful poison that will even make a pro wrestler sick, Regice cloaks itself with frigid air of -328 degrees Fahrenheit",
-    icon: IconGauge,
-  },
-  {
-    title: "Privacy focused",
-    description:
-      "People say it can run at the same speed as lightning striking, Its icy body is so cold, it will not melt even if it is immersed in magma",
-    icon: IconUser,
-  },
-  {
-    title: "No third parties",
-    description:
-      "They’re popular, but they’re rare. Trainers who show them off recklessly may be targeted by thieves",
-    icon: IconCookie,
-  },
-];
+import { getOrderData } from "../Service/OrderData.jsx";
 
 const useStyles = createStyles((theme) => ({
   title: {
@@ -57,70 +28,48 @@ const useStyles = createStyles((theme) => ({
       marginRight: "auto",
     },
   },
-
-  card: {
-    border: `${rem(1)} solid ${
-      theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.gray[1]
-    }`,
-  },
-
-  cardTitle: {
-    "&::after": {
-      content: '""',
-      display: "block",
-      backgroundColor: theme.fn.primaryColor(),
-      width: rem(45),
-      height: rem(2),
-      marginTop: theme.spacing.sm,
-    },
-  },
 }));
 
 export function FeaturesCards() {
+  const [orderData, setOrderData] = useState([]);
+  useEffect(() => {
+    getOrder();
+  }, []);
+  const getOrder = async () => {
+    const response = await getOrderData();
+    console.log(response);
+    return setOrderData(response.data);
+  };
+
   const { classes, theme } = useStyles();
-  const features = mockdata.map((feature) => (
-    <Card
-      key={feature.title}
-      shadow="md"
-      radius="md"
-      className={classes.card}
-      padding="xl"
-    >
-      <feature.icon size={rem(50)} stroke={2} color={theme.fn.primaryColor()} />
-      <Text fz="lg" fw={500} className={classes.cardTitle} mt="md">
-        {feature.title}
-      </Text>
-      <Text fz="sm" c="dimmed" mt="sm">
-        {feature.description}
-      </Text>
-    </Card>
+  const orders = orderData.map((data) => (
+    <tr key={data.id}>
+      <td>{data.id}</td>
+      <td>{data.userName}</td>
+      <td>
+        {data.dateNtime.year}-{data.dateNtime.month}-{data.dateNtime.day}
+      </td>
+      <td>{data.price}</td>
+      <td>
+        <Badge>{data.status}</Badge>
+      </td>
+    </tr>
   ));
 
   return (
     <Container size="lg" py="xl">
-      <Group position="center">
-        <Badge variant="filled" size="lg">
-          Best company ever
-        </Badge>
-      </Group>
-
-      <Title order={2} className={classes.title} ta="center" mt="sm">
-        Integrate effortlessly with any technology stack
-      </Title>
-
-      <Text c="dimmed" className={classes.description} ta="center" mt="md">
-        Every once in a while, you’ll see a Golbat that’s missing some fangs.
-        This happens when hunger drives it to try biting a Steel-type Pokémon.
-      </Text>
-
-      <SimpleGrid
-        cols={3}
-        spacing="xl"
-        mt={50}
-        breakpoints={[{ maxWidth: "md", cols: 1 }]}
-      >
-        {features}
-      </SimpleGrid>
+      <Table>
+        <thead>
+          <tr>
+            <th>Sr. No.</th>
+            <th>Name</th>
+            <th>Date and time</th>
+            <th>Price</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>{orders}</tbody>
+      </Table>
     </Container>
   );
 }
