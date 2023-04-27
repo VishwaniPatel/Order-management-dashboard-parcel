@@ -1,13 +1,30 @@
 import React from "react";
-import { AppShell, Navbar, Header } from "@mantine/core";
-import Main, { FeaturesCards } from "./components/Main";
+import { AppShell } from "@mantine/core";
+import { MainSection } from "./components/Main";
 import { HeaderResponsive } from "./components/Header/Header";
 import { NavbarSimple } from "./components/NavBar";
-
+import AddOrderForm from "./components/AddOrderForm";
+import RootLayout from "./pages/Root";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <RootLayout />,
+    children: [
+      {
+        path: "/",
+        element: <MainSection />,
+      },
+      {
+        path: "/order-form",
+        element: <AddOrderForm />,
+      },
+    ],
+  },
+]);
 function App() {
   return (
     <AppShell
-      padding="md"
       navbar={<NavbarSimple />}
       header={<HeaderResponsive />}
       styles={(theme) => ({
@@ -19,8 +36,7 @@ function App() {
         },
       })}
     >
-      <FeaturesCards />
-      {/* Your application here */}
+      <RouterProvider router={router}></RouterProvider>
     </AppShell>
   );
 }

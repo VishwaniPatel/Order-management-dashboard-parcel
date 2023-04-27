@@ -7,18 +7,19 @@ import {
   Table,
   Menu,
   Text,
+  Modal,
+  Group,
+  Button,
+  Image,
 } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import { useState, useEffect, useCallback } from "react";
 import {
-  IconGauge,
-  IconUser,
-  IconCookie,
   IconDotsVertical,
   IconTrash,
   IconShoppingBag,
 } from "@tabler/icons-react";
 import { getOrderData, deleteOrderData } from "../Service/OrderData.jsx";
-import ActionMenu from "./ActionMenu.jsx";
 import { IconEdit } from "@tabler/icons-react";
 
 const useStyles = createStyles((theme) => ({
@@ -48,14 +49,13 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export function FeaturesCards() {
+export function MainSection() {
   const { classes, theme } = useStyles();
   const [orderData, setOrderData] = useState([]);
   const [dataLength, setDataLength] = useState();
-
+  const [opened, { open, close }] = useDisclosure(false);
   useEffect(() => {
     setDataLength(orderData.length);
-    // console.log({ orderData });
   }, []);
   useEffect(() => {
     getOrder();
@@ -66,33 +66,43 @@ export function FeaturesCards() {
       const response = res.data;
 
       for (const key in response) {
-        const data = {
-          id: key,
-          userName: response[key].userName,
-          price: response[key].price,
-          status: response[key].status,
-        };
-        orders.push(data);
+        if (response[key]) {
+          const data = {
+            id: key,
+            userName: response[key].userName,
+            profileImage: response[key].profileImage,
+            dateNtime: response[key].dateNtime,
+            price: response[key].price,
+            status: response[key].status,
+          };
+          orders.push(data);
+        }
       }
     });
-    // console.log(orders);
     setOrderData(orders);
   };
 
   const deleteOrder = async (id) => {
     console.log(id);
     await deleteOrderData(id);
-    const updatedOrderData = orderData?.filter((data) => data?.id !== id);
-    // console.log("After deletion", updatedOrderData);
+
     getOrder();
+    setOrderData((orderData) => orderData.filter((data) => data.id !== id));
   };
-  const totalOrder = orderData.length;
+
   const orders = orderData?.map((data, index) => (
     <tr key={index}>
       <td>{index}</td>
-      <td>{data?.userName}</td>
+
       <td>
-        {data?.dateNtime?.year}-{data?.dateNtime?.month}-{data?.dateNtime?.day}
+        <Group>
+          <Image maw={40} radius="md" src={data.profileImage} alt="user" />
+          <Text>{data?.userName}</Text>
+        </Group>
+      </td>
+      <td>
+        {data?.dateNtime}
+        {/* {data?.dateNtime?.day}-{data?.dateNtime?.month}-{data?.dateNtime?.year} */}
       </td>
       <td>{data?.price}</td>
       <td>
@@ -105,13 +115,31 @@ export function FeaturesCards() {
           </Menu.Target>
           <Menu.Dropdown>
             <Menu.Item icon={<IconEdit size={14} />}>Edit</Menu.Item>
-            <Menu.Item
-              icon={<IconTrash size={14} />}
-              onClick={() => deleteOrder(data.id)}
-              // onClick={deleteOrder.bind(null, data.id)}
+            <Modal
+              opened={opened}
+              onClose={close}
+              title="Are Your Sure you want to delete?"
+              centered
             >
-              Delete
-            </Menu.Item>
+              <Group position="center">
+                <Button onClick={() => deleteOrder(data.id)} title="Title">
+                  Delete
+                </Button>
+                <Button onClick={close} color="gray" title="Title">
+                  Cancel
+                </Button>
+              </Group>
+            </Modal>
+            <Group position="center">
+              <Menu.Item
+                icon={<IconTrash size={14} />}
+                onClick={open}
+                title="Title"
+                // onClick={deleteOrder.bind(null, data.id)}
+              >
+                Delete
+              </Menu.Item>
+            </Group>
           </Menu.Dropdown>
         </Menu>
       </td>
