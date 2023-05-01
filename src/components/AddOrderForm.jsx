@@ -10,29 +10,60 @@ import {
 import { DateInput } from "@mantine/dates";
 import { useForm, isNotEmpty } from "@mantine/form";
 import useInput from "./use-input";
-import { useState } from "react";
-import { addOrderData } from "../Service/OrderData";
+import { useEffect, useState } from "react";
+import {
+  addOrderData,
+  getOrderById,
+  patchOrderData,
+} from "../Service/OrderData";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 function AddOrderForm() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedValue, setSelectedOption] = useState(null);
-
+  const [userNameValue, setUserNameValue] = useState("");
+  const [priceValue, setPriceValue] = useState("");
+  const [orderData, setOrderData] = useState([]);
+  const { id } = useParams();
+  console.log(id);
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await getOrderById(id);
+        console.log(response);
+        setUserNameValue(response.data.userName);
+        setSelectedOption(response.data.status);
+        setPriceValue(response.data.price);
+        const date = new Date(response.data.dateNtime);
+        setSelectedDate(date);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData();
+  }, [id]);
   const dateChangeHandler = (date) => {
     setSelectedDate(date);
   };
   const selectChangeHandler = (option) => {
     setSelectedOption(option);
   };
-  const {
-    value: userNameValue,
-    valueChangeHandler: userNameChangeHandler,
-    reset: resetUserName,
-  } = useInput();
-  const {
-    value: priceValue,
-    valueChangeHandler: priceChangeHandler,
-    reset: resetPrice,
-  } = useInput();
+  const userNameChangeHandler = (event) => {
+    setUserNameValue(event.target.value);
+  };
+  const priceChangeHandler = (event) => {
+    setPriceValue(event.target.value);
+  };
+  // const {
+  //   value: userNameValue,
+  //   valueChangeHandler: userNameChangeHandler,
+  //   reset: resetUserName,
+  // } = useInput();
+  // const {
+  //   value: priceValue,
+  //   valueChangeHandler: priceChangeHandler,
+  //   reset: resetPrice,
+  // } = useInput();
 
   const options = [
     { value: "Pending", label: "Pending" },
@@ -41,21 +72,19 @@ function AddOrderForm() {
   ];
   const form = useForm({
     initialValues: {
-      //   email: "",
-      //   termsOfService: false,
       name: "",
       price: "",
       date: "",
     },
 
     validate: {
-      //   email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
       date: isNotEmpty("Name cannot be empty"),
       age: isNotEmpty("Age cannot be empty"),
       name: (value) =>
         value.length < 2 ? "Name must have at least 2 letters" : null,
     },
   });
+
   const submitHandler = (event) => {
     event.preventDefault();
     const order = {
@@ -64,23 +93,11 @@ function AddOrderForm() {
       price: priceValue,
       dateNtime: selectedDate,
     };
-    console.log("Submitted!");
-    console.log("Order", order);
-    console.log(userNameValue, priceValue, selectedDate, selectedValue);
     addOrderData(order);
-    // axios.post(
-    //   "https://order-management-dashboard-default-rtdb.firebaseio.com/orders.json",
-    //   {
-    //     userName: userNameValue,
-    //     status: selectedValue,
-    //     price: priceValue,
-    //     dateNtime: selectedDate,
-    //   }
-    // );
-    resetUserName();
-    resetPrice();
     setSelectedOption("");
     setSelectedDate("");
+    setUserNameValue("");
+    setPriceValue("");
   };
 
   return (
@@ -93,12 +110,6 @@ function AddOrderForm() {
           value={userNameValue}
           onChange={userNameChangeHandler}
         />
-        {/* <TextInput
-          mt="md"
-          label="Email"
-          placeholder="Email"
-          {...form.getInputProps("email")}
-        /> */}
         <TextInput
           mt="md"
           label="Price"

@@ -22,7 +22,7 @@ import {
   IconHistory,
   IconMessage,
 } from "@tabler/icons-react";
-// import { MantineLogo } from "@mantine/ds";
+import { Link } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
   //   header: {
@@ -94,18 +94,18 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const data = [
-  { link: "", label: "Live Orders", icon: IconLayoutDashboard },
-  { link: "", label: "Add New Order", icon: IconShoppingCartPlus },
-  { link: "", label: "Order History", icon: IconHistory },
-  { link: "", label: "Messages", icon: IconMessage },
-  { link: "", label: "Settings", icon: IconSettings },
+  { link: "/", label: "Live Orders", icon: IconLayoutDashboard },
+  { link: "/order-form", label: "Add New Order", icon: IconShoppingCartPlus },
+  { link: "/", label: "Order History", icon: IconHistory },
+  { link: "/", label: "Messages", icon: IconMessage },
+  { link: "/", label: "Settings", icon: IconSettings },
 ];
 
 export function NavbarSimple() {
   const { classes, cx } = useStyles();
   const [active, setActive] = useState("Billing");
 
-  const links = data.map((item) => (
+  const links = data.map((item, index) => (
     <a
       className={cx(classes.link, {
         [classes.linkActive]: item.label === active,
@@ -129,6 +129,7 @@ export function NavbarSimple() {
           <MantineLogo size={28} />
           <Code sx={{ fontWeight: 700 }}>v3.1.2</Code>
         </Group> */}
+
         {links}
       </Navbar.Section>
 

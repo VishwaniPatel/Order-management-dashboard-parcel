@@ -19,9 +19,13 @@ import {
   IconTrash,
   IconShoppingBag,
 } from "@tabler/icons-react";
-import { getOrderData, deleteOrderData } from "../Service/OrderData.jsx";
+import {
+  getOrderData,
+  deleteOrderData,
+  getOrderById,
+} from "../Service/OrderData.jsx";
 import { IconEdit } from "@tabler/icons-react";
-
+import { Link, useParams } from "react-router-dom";
 const useStyles = createStyles((theme) => ({
   title: {
     fontSize: rem(34),
@@ -52,8 +56,9 @@ const useStyles = createStyles((theme) => ({
 export function MainSection() {
   const { classes, theme } = useStyles();
   const [orderData, setOrderData] = useState([]);
-  const [dataLength, setDataLength] = useState();
+  const [dataLength, setDataLength] = useState(0);
   const [opened, { open, close }] = useDisclosure(false);
+
   useEffect(() => {
     setDataLength(orderData.length);
   }, []);
@@ -100,10 +105,7 @@ export function MainSection() {
           <Text>{data?.userName}</Text>
         </Group>
       </td>
-      <td>
-        {data?.dateNtime}
-        {/* {data?.dateNtime?.day}-{data?.dateNtime?.month}-{data?.dateNtime?.year} */}
-      </td>
+      <td>{data?.dateNtime}</td>
       <td>{data?.price}</td>
       <td>
         <Badge>{data?.status}</Badge>
@@ -114,7 +116,9 @@ export function MainSection() {
             <IconDotsVertical />
           </Menu.Target>
           <Menu.Dropdown>
-            <Menu.Item icon={<IconEdit size={14} />}>Edit</Menu.Item>
+            <Link to={"/edit-order/" + data.id}>
+              <Menu.Item icon={<IconEdit size={14} />}>Edit</Menu.Item>
+            </Link>
             <Modal
               opened={opened}
               onClose={close}

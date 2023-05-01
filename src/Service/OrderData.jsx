@@ -11,5 +11,21 @@ export const deleteOrderData = async (id) => {
   );
 };
 export const addOrderData = async (order) => {
-  return await axios.post(`${orders}`, { order });
+  return await axios.post(`${orders}`, order);
+};
+export const getOrderById = async (id) => {
+  return await axios.get(
+    `https://order-management-dashboard-default-rtdb.firebaseio.com/orders/${id}.json`
+  );
+};
+export const patchOrderData = async (id) => {
+  return await axios.patch(
+    `https://order-management-dashboard-default-rtdb.firebaseio.com/orders/${id}.json`,
+    {
+      userName: "userName",
+      status: "status",
+      price: "price",
+      dateNtime: "dateNtime",
+    }
+  );
 };

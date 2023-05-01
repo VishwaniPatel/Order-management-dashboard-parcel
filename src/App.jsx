@@ -19,6 +19,10 @@ const router = createBrowserRouter([
         path: "/order-form",
         element: <AddOrderForm />,
       },
+      {
+        path: "/edit-order/:id",
+        element: <AddOrderForm />,
+      },
     ],
   },
 ]);
