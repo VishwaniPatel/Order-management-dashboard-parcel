@@ -1,4 +1,5 @@
 import axios from "axios";
+
 const orders =
   "https://order-management-dashboard-default-rtdb.firebaseio.com/orders.json";
 
@@ -18,14 +19,9 @@ export const getOrderById = async (id) => {
     `https://order-management-dashboard-default-rtdb.firebaseio.com/orders/${id}.json`
   );
 };
-export const patchOrderData = async (id) => {
-  return await axios.patch(
+export const patchOrderData = async (id, order) => {
+  return await axios.put(
     `https://order-management-dashboard-default-rtdb.firebaseio.com/orders/${id}.json`,
-    {
-      userName: "userName",
-      status: "status",
-      price: "price",
-      dateNtime: "dateNtime",
-    }
+    order
   );
 };

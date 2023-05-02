@@ -11,21 +11,17 @@ import {
   Group,
   Button,
   Image,
+  Flex,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
 import { useState, useEffect, useCallback } from "react";
-import {
-  IconDotsVertical,
-  IconTrash,
-  IconShoppingBag,
-} from "@tabler/icons-react";
+import { IconDotsVertical, IconShoppingBag } from "@tabler/icons-react";
 import {
   getOrderData,
   deleteOrderData,
   getOrderById,
 } from "../Service/OrderData.jsx";
-import { IconEdit } from "@tabler/icons-react";
-import { Link, useParams } from "react-router-dom";
+import MenuDropdown from "./MenuDropdown.jsx";
+import FilterOrderData from "./FilterOrderData.jsx";
 const useStyles = createStyles((theme) => ({
   title: {
     fontSize: rem(34),
@@ -56,8 +52,8 @@ const useStyles = createStyles((theme) => ({
 export function MainSection() {
   const { classes, theme } = useStyles();
   const [orderData, setOrderData] = useState([]);
+  const [filterData, setFilterData] = useState();
   const [dataLength, setDataLength] = useState(0);
-  const [opened, { open, close }] = useDisclosure(false);
 
   useEffect(() => {
     setDataLength(orderData.length);
@@ -67,7 +63,7 @@ export function MainSection() {
   }, []);
   const getOrder = async () => {
     const orders = [];
-    const response = await getOrderData().then(async (res) => {
+    await getOrderData().then(async (res) => {
       const response = res.data;
 
       for (const key in response) {
@@ -86,16 +82,43 @@ export function MainSection() {
     });
     setOrderData(orders);
   };
+  // const deleteOrder = async (id) => {
+  //   await deleteOrderData(id);
 
-  const deleteOrder = async (id) => {
-    console.log(id);
+  //   getOrder();
+  //   setOrderData((orderData) => orderData.filter((data) => data.id !== id));
+  // };
+  const handleDataReceived = async (id) => {
     await deleteOrderData(id);
 
     getOrder();
     setOrderData((orderData) => orderData.filter((data) => data.id !== id));
   };
-
-  const orders = orderData?.map((data, index) => (
+  const onFilterData = (id) => {
+    console.log(id);
+    if (id === 0) {
+      setFilterData(orderData);
+    }
+    if (id === 1) {
+      const filteredData = orderData.filter((res) => {
+        return res.status == "Pending";
+      });
+      setFilterData(filteredData);
+    }
+    if (id === 2) {
+      const filteredData = orderData.filter((res) => {
+        return res.status == "Dispatch";
+      });
+      setFilterData(filteredData);
+    }
+    if (id === 3) {
+      const filteredData = orderData.filter((res) => {
+        return res.status == "Completed";
+      });
+      setFilterData(filteredData);
+    }
+  };
+  const orders = filterData?.map((data, index) => (
     <tr key={index}>
       <td>{index}</td>
 
@@ -115,36 +138,7 @@ export function MainSection() {
           <Menu.Target>
             <IconDotsVertical />
           </Menu.Target>
-          <Menu.Dropdown>
-            <Link to={"/edit-order/" + data.id}>
-              <Menu.Item icon={<IconEdit size={14} />}>Edit</Menu.Item>
-            </Link>
-            <Modal
-              opened={opened}
-              onClose={close}
-              title="Are Your Sure you want to delete?"
-              centered
-            >
-              <Group position="center">
-                <Button onClick={() => deleteOrder(data.id)} title="Title">
-                  Delete
-                </Button>
-                <Button onClick={close} color="gray" title="Title">
-                  Cancel
-                </Button>
-              </Group>
-            </Modal>
-            <Group position="center">
-              <Menu.Item
-                icon={<IconTrash size={14} />}
-                onClick={open}
-                title="Title"
-                // onClick={deleteOrder.bind(null, data.id)}
-              >
-                Delete
-              </Menu.Item>
-            </Group>
-          </Menu.Dropdown>
+          <MenuDropdown data={data} onDataReceived={handleDataReceived} />
         </Menu>
       </td>
     </tr>
@@ -165,6 +159,12 @@ export function MainSection() {
           {dataLength}
         </Text>
       </Card>
+      <Flex justify="space-between">
+        <Text fz="xl" fw={700}>
+          Orders
+        </Text>
+        <FilterOrderData onDataReceived={onFilterData} />
+      </Flex>
       <Table>
         <thead>
           <tr>

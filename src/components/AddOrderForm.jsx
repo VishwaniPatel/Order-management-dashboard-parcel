@@ -1,6 +1,5 @@
 import {
   TextInput,
-  Checkbox,
   Button,
   Group,
   Box,
@@ -16,7 +15,6 @@ import {
   getOrderById,
   patchOrderData,
 } from "../Service/OrderData";
-import axios from "axios";
 import { useParams } from "react-router-dom";
 function AddOrderForm() {
   const [selectedDate, setSelectedDate] = useState(null);
@@ -25,12 +23,12 @@ function AddOrderForm() {
   const [priceValue, setPriceValue] = useState("");
   const [orderData, setOrderData] = useState([]);
   const { id } = useParams();
-  console.log(id);
+
   useEffect(() => {
     async function fetchData() {
       try {
         const response = await getOrderById(id);
-        console.log(response);
+
         setUserNameValue(response.data.userName);
         setSelectedOption(response.data.status);
         setPriceValue(response.data.price);
@@ -93,7 +91,11 @@ function AddOrderForm() {
       price: priceValue,
       dateNtime: selectedDate,
     };
-    addOrderData(order);
+    if (id) {
+      patchOrderData(id, order);
+    } else {
+      addOrderData(order);
+    }
     setSelectedOption("");
     setSelectedDate("");
     setUserNameValue("");

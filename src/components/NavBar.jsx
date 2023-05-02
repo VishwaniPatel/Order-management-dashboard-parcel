@@ -95,7 +95,7 @@ const useStyles = createStyles((theme) => ({
 
 const data = [
   { link: "/", label: "Live Orders", icon: IconLayoutDashboard },
-  { link: "/order-form", label: "Add New Order", icon: IconShoppingCartPlus },
+  { link: "order-form", label: "Add New Order", icon: IconShoppingCartPlus },
   { link: "/", label: "Order History", icon: IconHistory },
   { link: "/", label: "Messages", icon: IconMessage },
   { link: "/", label: "Settings", icon: IconSettings },
@@ -132,26 +132,6 @@ export function NavbarSimple() {
 
         {links}
       </Navbar.Section>
-
-      {/* <Navbar.Section className={classes.footer}>
-        <a
-          href="#"
-          className={classes.link}
-          onClick={(event) => event.preventDefault()}
-        >
-          <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />
-          <span>Change account</span>
-        </a>
-
-        <a
-          href="#"
-          className={classes.link}
-          onClick={(event) => event.preventDefault()}
-        >
-          <IconLogout className={classes.linkIcon} stroke={1.5} />
-          <span>Logout</span>
-        </a>
-      </Navbar.Section> */}
     </Navbar>
   );
 }
