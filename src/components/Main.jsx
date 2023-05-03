@@ -12,6 +12,8 @@ import {
   Button,
   Image,
   Flex,
+  Input,
+  Grid,
 } from "@mantine/core";
 import { useState, useEffect, useCallback } from "react";
 import { IconDotsVertical, IconShoppingBag } from "@tabler/icons-react";
@@ -54,6 +56,9 @@ export function MainSection() {
   const [orderData, setOrderData] = useState([]);
   const [filterData, setFilterData] = useState();
   const [dataLength, setDataLength] = useState(0);
+  const [pendingDataLength, setPendingDataLength] = useState(0);
+  const [dispatchDataLength, setDispatchDataLength] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     setDataLength(orderData.length);
@@ -61,6 +66,20 @@ export function MainSection() {
   useEffect(() => {
     getOrder();
   }, []);
+  useEffect(() => {
+    pendingOrders();
+  }, []);
+  useEffect(() => {
+    setDispatchDataLength(dispatchOrders.length);
+  }, [dispatchDataLength]);
+  const pendingOrders = () =>
+    orderData.filter((res) => {
+      const pending = res.status == "Pending";
+      return setPendingDataLength(pending.length);
+    });
+  const dispatchOrders = orderData.filter((res) => {
+    return res.status == "Dispatch";
+  });
   const getOrder = async () => {
     const orders = [];
     await getOrderData().then(async (res) => {
@@ -81,6 +100,7 @@ export function MainSection() {
       }
     });
     setOrderData(orders);
+    setFilterData(orders);
   };
   // const deleteOrder = async (id) => {
   //   await deleteOrderData(id);
@@ -94,6 +114,22 @@ export function MainSection() {
     getOrder();
     setOrderData((orderData) => orderData.filter((data) => data.id !== id));
   };
+
+  const handleSearchChange = (event) => {
+    const value = event.target.value.toLowerCase();
+    console.log(value);
+    setSearchQuery(value);
+    const filteredData = filterData.filter(
+      (item) =>
+        item.status.toLowerCase().includes(value) ||
+        item.userName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilterData(filteredData);
+  };
+  // const filteredList = orderData.filter(
+  //   (item) => console.log(item)
+  //   // item.name.toLowerCase().includes(searchQuery.toLowerCase())
+  // );
   const onFilterData = (id) => {
     console.log(id);
     if (id === 0) {
@@ -146,26 +182,62 @@ export function MainSection() {
 
   return (
     <Container size="lg" py="xl">
-      <Card shadow="md" radius="md" className={classes.card} padding="xl">
-        <IconShoppingBag
-          size={rem(50)}
-          stroke={2}
-          color={theme.fn.primaryColor()}
-        />
-        <Text fz="lg" fw={500} className={classes.cardTitle} mt="md">
-          Total Orders
-        </Text>
-        <Text fz="sm" c="dimmed" mt="sm">
-          {dataLength}
-        </Text>
-      </Card>
+      <Grid>
+        <Card shadow="md" radius="md" className={classes.card} padding="xl">
+          <IconShoppingBag
+            size={rem(50)}
+            stroke={2}
+            color={theme.fn.primaryColor()}
+          />
+          <Text fz="lg" fw={500} className={classes.cardTitle} mt="md">
+            Total Orders
+          </Text>
+          <Text fz="sm" c="dimmed" mt="sm">
+            {dataLength}
+          </Text>
+        </Card>
+        <Card shadow="md" radius="md" className={classes.card} padding="xl">
+          <IconShoppingBag
+            size={rem(50)}
+            stroke={2}
+            color={theme.fn.primaryColor()}
+          />
+          <Text fz="lg" fw={500} className={classes.cardTitle} mt="md">
+            Total Orders
+          </Text>
+          <Text fz="sm" c="dimmed" mt="sm">
+            {pendingDataLength}
+          </Text>
+        </Card>
+        <Card shadow="md" radius="md" className={classes.card} padding="xl">
+          <IconShoppingBag
+            size={rem(50)}
+            stroke={2}
+            color={theme.fn.primaryColor()}
+          />
+          <Text fz="lg" fw={500} className={classes.cardTitle} mt="md">
+            Total Orders
+          </Text>
+          <Text fz="sm" c="dimmed" mt="sm">
+            {dataLength}
+          </Text>
+        </Card>
+      </Grid>
       <Flex justify="space-between">
         <Text fz="xl" fw={700}>
           Orders
         </Text>
-        <FilterOrderData onDataReceived={onFilterData} />
+        <Group>
+          <Input
+            type="text"
+            placeholder="Search here"
+            value={searchQuery}
+            onChange={handleSearchChange}
+          />
+          <FilterOrderData onDataReceived={onFilterData} />
+        </Group>
       </Flex>
-      <Table>
+      <Table striped highlightOnHover>
         <thead>
           <tr>
             <th>Sr. No.</th>
