@@ -14,9 +14,15 @@ import {
   Flex,
   Input,
   Grid,
+  Space,
 } from "@mantine/core";
 import { useState, useEffect, useCallback } from "react";
-import { IconDotsVertical, IconShoppingBag } from "@tabler/icons-react";
+import {
+  IconDotsVertical,
+  IconReport,
+  IconShoppingBag,
+  IconTruckDelivery,
+} from "@tabler/icons-react";
 import {
   getOrderData,
   deleteOrderData,
@@ -24,6 +30,7 @@ import {
 } from "../Service/OrderData.jsx";
 import MenuDropdown from "./MenuDropdown.jsx";
 import FilterOrderData from "./FilterOrderData.jsx";
+
 const useStyles = createStyles((theme) => ({
   title: {
     fontSize: rem(34),
@@ -60,23 +67,9 @@ export function MainSection() {
   const [dispatchDataLength, setDispatchDataLength] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
 
-  useEffect(() => {
-    setDataLength(orderData.length);
-  }, []);
-  useEffect(() => {
-    getOrder();
-  }, []);
-  useEffect(() => {
-    pendingOrders();
-  }, []);
-  useEffect(() => {
-    setDispatchDataLength(dispatchOrders.length);
-  }, [dispatchDataLength]);
-  const pendingOrders = () =>
-    orderData.filter((res) => {
-      const pending = res.status == "Pending";
-      return setPendingDataLength(pending.length);
-    });
+  const pendingOrders = orderData.filter((res) => {
+    return res.status == "Pending";
+  });
   const dispatchOrders = orderData.filter((res) => {
     return res.status == "Dispatch";
   });
@@ -84,7 +77,7 @@ export function MainSection() {
     const orders = [];
     await getOrderData().then(async (res) => {
       const response = res.data;
-
+      console.log(response);
       for (const key in response) {
         if (response[key]) {
           const data = {
@@ -116,12 +109,12 @@ export function MainSection() {
   };
 
   const handleSearchChange = (event) => {
-    const value = event.target.value.toLowerCase();
+    const value = event?.target?.value?.toLowerCase();
     console.log(value);
     setSearchQuery(value);
     const filteredData = filterData.filter(
       (item) =>
-        item.status.toLowerCase().includes(value) ||
+        item.status?.toLowerCase().includes(value) ||
         item.userName.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilterData(filteredData);
@@ -180,49 +173,69 @@ export function MainSection() {
     </tr>
   ));
 
+  useEffect(() => {
+    getOrder();
+  }, []);
+  useEffect(() => {
+    setDataLength(orderData.length);
+  }, [orderData]);
+  useEffect(() => {
+    setDispatchDataLength(dispatchOrders.length);
+  }, [dispatchOrders]);
+  useEffect(() => {
+    setPendingDataLength(pendingOrders.length);
+  }, [pendingOrders]);
+
   return (
-    <Container size="lg" py="xl">
-      <Grid>
-        <Card shadow="md" radius="md" className={classes.card} padding="xl">
-          <IconShoppingBag
-            size={rem(50)}
-            stroke={2}
-            color={theme.fn.primaryColor()}
-          />
-          <Text fz="lg" fw={500} className={classes.cardTitle} mt="md">
-            Total Orders
-          </Text>
-          <Text fz="sm" c="dimmed" mt="sm">
-            {dataLength}
-          </Text>
-        </Card>
-        <Card shadow="md" radius="md" className={classes.card} padding="xl">
-          <IconShoppingBag
-            size={rem(50)}
-            stroke={2}
-            color={theme.fn.primaryColor()}
-          />
-          <Text fz="lg" fw={500} className={classes.cardTitle} mt="md">
-            Total Orders
-          </Text>
-          <Text fz="sm" c="dimmed" mt="sm">
-            {pendingDataLength}
-          </Text>
-        </Card>
-        <Card shadow="md" radius="md" className={classes.card} padding="xl">
-          <IconShoppingBag
-            size={rem(50)}
-            stroke={2}
-            color={theme.fn.primaryColor()}
-          />
-          <Text fz="lg" fw={500} className={classes.cardTitle} mt="md">
-            Total Orders
-          </Text>
-          <Text fz="sm" c="dimmed" mt="sm">
-            {dataLength}
-          </Text>
-        </Card>
+    <Container size="lg">
+      <Grid grow gutter={5} gutterXs="md" gutterMd="xl" gutterXl={50}>
+        <Grid.Col span={4}>
+          <Card shadow="md" radius="md" className={classes.card} padding="xl">
+            <IconShoppingBag
+              size={rem(50)}
+              stroke={2}
+              color={theme.fn.primaryColor()}
+            />
+            <Text fz="lg" fw={500} className={classes.cardTitle} mt="md">
+              Total Orders
+            </Text>
+            <Text fz="sm" c="dimmed" mt="sm">
+              {dataLength}
+            </Text>
+          </Card>
+        </Grid.Col>
+        <Grid.Col span={4}>
+          <Card shadow="md" radius="md" className={classes.card} padding="xl">
+            <IconReport
+              size={rem(50)}
+              stroke={2}
+              color={theme.fn.primaryColor()}
+            />
+            <Text fz="lg" fw={500} className={classes.cardTitle} mt="md">
+              Total Pending Orders
+            </Text>
+            <Text fz="sm" c="dimmed" mt="sm">
+              {pendingDataLength}
+            </Text>
+          </Card>
+        </Grid.Col>
+        <Grid.Col span={4}>
+          <Card shadow="md" radius="md" className={classes.card} padding="xl">
+            <IconTruckDelivery
+              size={rem(50)}
+              stroke={2}
+              color={theme.fn.primaryColor()}
+            />
+            <Text fz="lg" fw={500} className={classes.cardTitle} mt="md">
+              Total Dispatch Orders
+            </Text>
+            <Text fz="sm" c="dimmed" mt="sm">
+              {dispatchDataLength}
+            </Text>
+          </Card>
+        </Grid.Col>
       </Grid>
+      <Space h="lg" />
       <Flex justify="space-between">
         <Text fz="xl" fw={700}>
           Orders
@@ -237,6 +250,7 @@ export function MainSection() {
           <FilterOrderData onDataReceived={onFilterData} />
         </Group>
       </Flex>
+      <Space h="lg" />
       <Table striped highlightOnHover>
         <thead>
           <tr>

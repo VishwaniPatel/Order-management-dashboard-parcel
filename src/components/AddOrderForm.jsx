@@ -22,6 +22,12 @@ function AddOrderForm() {
   const [userNameValue, setUserNameValue] = useState("");
   const [priceValue, setPriceValue] = useState("");
   const [orderData, setOrderData] = useState([]);
+  const [file, setFile] = useState("");
+  const [imagePreview, setImagePreview] = useState();
+  const [base64, setBase64] = useState("");
+  const [name, setName] = useState("");
+  const [size, setSize] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams();
 
   useEffect(() => {
@@ -85,11 +91,14 @@ function AddOrderForm() {
 
   const submitHandler = (event) => {
     event.preventDefault();
+    let payload = { image: base64 };
+    console.log(payload);
     const order = {
       userName: userNameValue,
       status: selectedValue,
       price: priceValue,
       dateNtime: selectedDate,
+      profileImage: payload,
     };
     if (id) {
       patchOrderData(id, order);
@@ -101,10 +110,39 @@ function AddOrderForm() {
     setUserNameValue("");
     setPriceValue("");
   };
+  const onChange = (e) => {
+    console.log("file", e?.target?.files[0]);
+    let file = e?.target?.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = _handleReaderLoaded;
+      reader.readAsBinaryString(file);
+    }
+  };
 
+  const _handleReaderLoaded = (readerEvt) => {
+    let binaryString = readerEvt.target.result;
+    setBase64(btoa(binaryString));
+  };
+  const photoUpload = (e) => {
+    // e.preventDefault();
+    const reader = new FileReader();
+    const file = e?.target?.files[0];
+    console.log("reader", reader);
+    console.log("file", file);
+    if (reader !== undefined && file !== undefined) {
+      reader.onloadend = () => {
+        setFile(file);
+        setSize(file.size);
+        setName(file.name);
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
   return (
     <Box maw={300} mx="auto">
-      <form onSubmit={submitHandler}>
+      <form onSubmit={submitHandler} onChange={(e) => onChange(e)}>
         <TextInput
           label="Name"
           placeholder="Name"
@@ -138,12 +176,16 @@ function AddOrderForm() {
           value={selectedValue}
           onChange={selectChangeHandler}
         />
-        {/* <FileInput
+        {/* <input type="file" name="avatar" id="file" accept=".jpef, .png, .jpg" onChange={photoUpload} src={imagePreview} /> */}
+        <FileInput
           label="Upload files"
           mt="md"
           placeholder="Upload files"
           accept="image/png,image/jpeg"
-        /> */}
+          onChange={photoUpload}
+          src={imagePreview}
+        />
+        <img src={imagePreview} alt="User Image" />
         {/* <Checkbox
           mt="md"
           label="I agree to sell my privacy"

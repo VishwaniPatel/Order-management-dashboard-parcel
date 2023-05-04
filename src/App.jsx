@@ -29,6 +29,7 @@ const router = createBrowserRouter([
 function App() {
   return (
     <AppShell
+      fixed
       navbar={<NavbarSimple />}
       header={<HeaderResponsive />}
       styles={(theme) => ({
