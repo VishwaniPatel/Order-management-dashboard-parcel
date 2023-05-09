@@ -21,6 +21,7 @@ import {
   IconShoppingCartPlus,
   IconHistory,
   IconMessage,
+  IconBuildingStore,
 } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
 
@@ -97,7 +98,7 @@ const data = [
   { link: "/", label: "Live Orders", icon: IconLayoutDashboard },
   { link: "order-form", label: "Add New Order", icon: IconShoppingCartPlus },
   { link: "/", label: "Order History", icon: IconHistory },
-  { link: "/", label: "Messages", icon: IconMessage },
+  { link: "/", label: "Available Stock", icon: IconBuildingStore },
   { link: "/", label: "Settings", icon: IconSettings },
 ];
 

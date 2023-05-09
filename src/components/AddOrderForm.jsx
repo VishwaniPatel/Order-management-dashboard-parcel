@@ -30,6 +30,7 @@ function AddOrderForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams();
 
+  // fetch data from database to get order detail
   useEffect(() => {
     async function fetchData() {
       try {
@@ -46,17 +47,19 @@ function AddOrderForm() {
     }
     fetchData();
   }, [id]);
-  const dateChangeHandler = (date) => {
-    setSelectedDate(date);
-  };
-  const selectChangeHandler = (option) => {
-    setSelectedOption(option);
-  };
+
+  // set values of input fields
   const userNameChangeHandler = (event) => {
     setUserNameValue(event.target.value);
   };
   const priceChangeHandler = (event) => {
     setPriceValue(event.target.value);
+  };
+  const dateChangeHandler = (date) => {
+    setSelectedDate(date);
+  };
+  const selectChangeHandler = (option) => {
+    setSelectedOption(option);
   };
   // const {
   //   value: userNameValue,
@@ -74,6 +77,7 @@ function AddOrderForm() {
     { value: "Dispatch", label: "Dispatch" },
     { value: "Completed", label: "Completed" },
   ];
+  // set initial values of form
   const form = useForm({
     initialValues: {
       name: "",
@@ -81,6 +85,7 @@ function AddOrderForm() {
       date: "",
     },
 
+    // form validation
     validate: {
       date: isNotEmpty("Name cannot be empty"),
       age: isNotEmpty("Age cannot be empty"),
@@ -89,6 +94,7 @@ function AddOrderForm() {
     },
   });
 
+  // submit the data on click event
   const submitHandler = (event) => {
     event.preventDefault();
     let payload = { image: base64 };
@@ -100,9 +106,12 @@ function AddOrderForm() {
       dateNtime: selectedDate,
       profileImage: payload,
     };
+    // performs when order updated
     if (id) {
       patchOrderData(id, order);
-    } else {
+    }
+    // whene new order is added
+    else {
       addOrderData(order);
     }
     setSelectedOption("");

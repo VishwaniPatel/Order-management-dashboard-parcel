@@ -1,11 +1,12 @@
 import React from "react";
-import { AppShell } from "@mantine/core";
+import { Flex, AppShell, Navbar, Header } from "@mantine/core";
 import { MainSection } from "./components/Main";
 import { HeaderResponsive } from "./components/Header/Header";
 import { NavbarSimple } from "./components/NavBar";
 import AddOrderForm from "./components/AddOrderForm";
 import RootLayout from "./pages/Root";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import ProductManagement from "./pages/ProductManagement";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -23,15 +24,27 @@ const router = createBrowserRouter([
         path: "/edit-order/:id",
         element: <AddOrderForm />,
       },
+      {
+        path: "/stock-management",
+        element: <ProductManagement />,
+      },
     ],
   },
 ]);
 function App() {
   return (
     <AppShell
-      fixed
-      navbar={<NavbarSimple />}
-      header={<HeaderResponsive />}
+      padding="md"
+      navbar={
+        <Navbar width={{ base: 300 }} height={1700} p="xs">
+          <NavbarSimple />
+        </Navbar>
+      }
+      header={
+        <Header height={60}>
+          <HeaderResponsive />
+        </Header>
+      }
       styles={(theme) => ({
         main: {
           backgroundColor:
@@ -43,6 +56,14 @@ function App() {
     >
       <RouterProvider router={router}></RouterProvider>
     </AppShell>
+    // <>
+    //   <HeaderResponsive />
+    //   <Flex>
+    //     <NavbarSimple />
+    //     <RouterProvider router={router}></RouterProvider>
+    //   </Flex>
+    // </>
+    // </AppShell>
   );
 }
 

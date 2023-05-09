@@ -67,12 +67,14 @@ export function MainSection() {
   const [dispatchDataLength, setDispatchDataLength] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
 
+  // filter data according to status
   const pendingOrders = orderData.filter((res) => {
     return res.status == "Pending";
   });
   const dispatchOrders = orderData.filter((res) => {
     return res.status == "Dispatch";
   });
+  // get order details from database
   const getOrder = async () => {
     const orders = [];
     await getOrderData().then(async (res) => {
@@ -101,6 +103,8 @@ export function MainSection() {
   //   getOrder();
   //   setOrderData((orderData) => orderData.filter((data) => data.id !== id));
   // };
+
+  // delete selected order data
   const handleDataReceived = async (id) => {
     await deleteOrderData(id);
 
@@ -123,6 +127,11 @@ export function MainSection() {
   //   (item) => console.log(item)
   //   // item.name.toLowerCase().includes(searchQuery.toLowerCase())
   // );
+
+  /**
+   * filter data according to function
+   * @param {status id} id
+   */
   const onFilterData = (id) => {
     console.log(id);
     if (id === 0) {
@@ -187,7 +196,7 @@ export function MainSection() {
   }, [pendingOrders]);
 
   return (
-    <Container size="lg">
+    <Container>
       <Grid grow gutter={5} gutterXs="md" gutterMd="xl" gutterXl={50}>
         <Grid.Col span={4}>
           <Card shadow="md" radius="md" className={classes.card} padding="xl">
