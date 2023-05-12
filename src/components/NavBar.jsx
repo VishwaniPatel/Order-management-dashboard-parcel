@@ -111,7 +111,6 @@ export function NavbarSimple() {
       className={cx(classes.link, {
         [classes.linkActive]: item.label === active,
       })}
-      href={item.link}
       key={item.label}
       onClick={(event) => {
         event.preventDefault();

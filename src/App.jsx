@@ -7,6 +7,8 @@ import AddOrderForm from "./components/AddOrderForm";
 import RootLayout from "./pages/Root";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ProductManagement from "./pages/ProductManagement";
+import RegistrationForm from "./pages/Registration";
+import LoginForm from "./pages/Login";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -27,6 +29,14 @@ const router = createBrowserRouter([
       {
         path: "/stock-management",
         element: <ProductManagement />,
+      },
+      {
+        path: "/registration",
+        element: <RegistrationForm />,
+      },
+      {
+        path: "/login",
+        element: <LoginForm />,
       },
     ],
   },
