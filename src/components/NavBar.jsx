@@ -96,7 +96,7 @@ const useStyles = createStyles((theme) => ({
 
 const data = [
   { link: "/", label: "Live Orders", icon: IconLayoutDashboard },
-  { link: "order-form", label: "Add New Order", icon: IconShoppingCartPlus },
+  { link: "/order-form", label: "Add New Order", icon: IconShoppingCartPlus },
   { link: "/", label: "Order History", icon: IconHistory },
   { link: "/", label: "Available Stock", icon: IconBuildingStore },
   { link: "/", label: "Settings", icon: IconSettings },

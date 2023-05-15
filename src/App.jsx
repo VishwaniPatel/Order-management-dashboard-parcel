@@ -7,40 +7,41 @@ import AddOrderForm from "./components/AddOrderForm";
 import RootLayout from "./pages/Root";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ProductManagement from "./pages/ProductManagement";
+import { Route, Routes } from "react-router-dom";
 import RegistrationForm from "./pages/Registration";
 import LoginForm from "./pages/Login";
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <RootLayout />,
-    children: [
-      {
-        path: "/",
-        element: <MainSection />,
-      },
-      {
-        path: "/order-form",
-        element: <AddOrderForm />,
-      },
-      {
-        path: "/edit-order/:id",
-        element: <AddOrderForm />,
-      },
-      {
-        path: "/stock-management",
-        element: <ProductManagement />,
-      },
-      {
-        path: "/registration",
-        element: <RegistrationForm />,
-      },
-      {
-        path: "/login",
-        element: <LoginForm />,
-      },
-    ],
-  },
-]);
+// const router = createBrowserRouter([
+//   {
+//     path: "/",
+//     element: <RootLayout />,
+//     children: [
+//       {
+//         path: "/",
+//         element: <MainSection />,
+//       },
+//       {
+//         path: "/order-form",
+//         element: <AddOrderForm />,
+//       },
+//       {
+//         path: "/edit-order/:id",
+//         element: <AddOrderForm />,
+//       },
+//       {
+//         path: "/stock-management",
+//         element: <ProductManagement />,
+//       },
+//       {
+//         path: "/registration",
+//         element: <RegistrationForm />,
+//       },
+//       {
+//         path: "/login",
+//         element: <LoginForm />,
+//       },
+//     ],
+//   },
+// ]);
 function App() {
   return (
     <AppShell
@@ -64,7 +65,17 @@ function App() {
         },
       })}
     >
-      <RouterProvider router={router}></RouterProvider>
+      <Routes>
+        <Route path="/" element={<MainSection />}></Route>
+        <Route path="/dashboard" element={<MainSection />}></Route>
+        <Route path="/order-form" element={<AddOrderForm />}></Route>
+        <Route path="/edit-order/:id" element={<AddOrderForm />}></Route>
+        <Route path="/stock-management" element={<ProductManagement />}></Route>
+        {/* <Route path="/company-form" element={<ProductManagement />}>
+          <Route path="add" element={<CompanyForm />}></Route>
+          <Route path="edit/:id" element={<CompanyForm />}></Route>
+        </Route> */}
+      </Routes>
     </AppShell>
     // <>
     //   <HeaderResponsive />
