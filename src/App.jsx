@@ -10,6 +10,8 @@ import ProductManagement from "./pages/ProductManagement";
 import { Route, Routes } from "react-router-dom";
 import RegistrationForm from "./pages/Registration";
 import LoginForm from "./pages/Login";
+import OrderHistroy from "./components/OrderHistroy";
+import { ProductProvider } from "./components/ProductContext";
 // const router = createBrowserRouter([
 //   {
 //     path: "/",
@@ -44,47 +46,55 @@ import LoginForm from "./pages/Login";
 // ]);
 function App() {
   return (
-    <AppShell
-      padding="md"
-      navbar={
-        <Navbar width={{ base: 300 }} height={1700} p="xs">
-          <NavbarSimple />
-        </Navbar>
-      }
-      header={
-        <Header height={60}>
-          <HeaderResponsive />
-        </Header>
-      }
-      styles={(theme) => ({
-        main: {
-          backgroundColor:
-            theme.colorScheme === "dark"
-              ? theme.colors.dark[8]
-              : theme.colors.gray[0],
-        },
-      })}
-    >
-      <Routes>
-        <Route path="/" element={<MainSection />}></Route>
-        <Route path="/dashboard" element={<MainSection />}></Route>
-        <Route path="/order-form" element={<AddOrderForm />}></Route>
-        <Route path="/edit-order/:id" element={<AddOrderForm />}></Route>
-        <Route path="/stock-management" element={<ProductManagement />}></Route>
-        {/* <Route path="/company-form" element={<ProductManagement />}>
+    <ProductProvider>
+      <AppShell
+        padding="md"
+        navbar={
+          <Navbar width={{ base: 300 }} height={1700} p="xs">
+            <NavbarSimple />
+          </Navbar>
+        }
+        header={
+          <Header height={60}>
+            <HeaderResponsive />
+          </Header>
+        }
+        styles={(theme) => ({
+          main: {
+            backgroundColor:
+              theme.colorScheme === "dark"
+                ? theme.colors.dark[8]
+                : theme.colors.gray[0],
+          },
+        })}
+      >
+        <Routes>
+          <Route path="/" element={<MainSection />}></Route>
+          <Route path="/dashboard" element={<MainSection />}></Route>
+          <Route path="/order-form" element={<AddOrderForm />}></Route>
+          <Route path="/edit-order/:id" element={<AddOrderForm />}></Route>
+          <Route
+            path="/stock-management"
+            element={<ProductManagement />}
+          ></Route>
+          <Route path="/order-history" element={<OrderHistroy />}></Route>
+          <Route path="/login" element={<LoginForm />}></Route>
+          <Route path="/register" element={<RegistrationForm />}></Route>
+          {/* <Route path="/company-form" element={<ProductManagement />}>
           <Route path="add" element={<CompanyForm />}></Route>
           <Route path="edit/:id" element={<CompanyForm />}></Route>
         </Route> */}
-      </Routes>
-    </AppShell>
-    // <>
+        </Routes>
+      </AppShell>
+      {/* // <>
     //   <HeaderResponsive />
     //   <Flex>
     //     <NavbarSimple />
     //     <RouterProvider router={router}></RouterProvider>
     //   </Flex>
     // </>
-    // </AppShell>
+    // </AppShell> */}
+    </ProductProvider>
   );
 }
 

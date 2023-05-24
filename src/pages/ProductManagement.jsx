@@ -5,10 +5,10 @@ import GetProductData from "../components/GetProductData";
 import { ProductProvider } from "../components/ProductContext";
 function ProductManagement() {
   return (
-    <ProductProvider>
+    <>
       <GetProductData />
       <StockManagement />
-    </ProductProvider>
+    </>
   );
 }
 

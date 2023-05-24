@@ -16,7 +16,8 @@ import {
   Grid,
   Space,
 } from "@mantine/core";
-import { useState, useEffect, useCallback } from "react";
+// import { BehaviorSubject } from "rxjs";
+import { useState, useEffect, useContext } from "react";
 import {
   IconDotsVertical,
   IconReport,
@@ -28,6 +29,7 @@ import {
   deleteOrderData,
   getOrderById,
 } from "../Service/OrderData.jsx";
+import { ProductContext } from "./ProductContext.js";
 import MenuDropdown from "./MenuDropdown.jsx";
 import FilterOrderData from "./FilterOrderData.jsx";
 
@@ -58,45 +60,27 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
+// export const dataLengthSubject = new BehaviorSubject(0);
 export function MainSection() {
   const { classes, theme } = useStyles();
-  const [orderData, setOrderData] = useState([]);
+  // const [orderData, setOrderData] = useState([]);
+  const { orderData, getOrder, pendingDataLength, dispatchDataLength } =
+    useContext(ProductContext);
+
   const [filterData, setFilterData] = useState();
   const [dataLength, setDataLength] = useState(0);
-  const [pendingDataLength, setPendingDataLength] = useState(0);
-  const [dispatchDataLength, setDispatchDataLength] = useState(0);
+  // const [pendingDataLength, setPendingDataLength] = useState(0);
+  // const [dispatchDataLength, setDispatchDataLength] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
+  // const orderDataS = orderData;
+  // // filter data according to status
+  // const pendingOrders = orderData.filter((res) => {
+  //   return res.status == "Pending";
+  // });
+  // const dispatchOrders = orderData.filter((res) => {
+  //   return res.status == "Dispatch";
+  // });
 
-  // filter data according to status
-  const pendingOrders = orderData.filter((res) => {
-    return res.status == "Pending";
-  });
-  const dispatchOrders = orderData.filter((res) => {
-    return res.status == "Dispatch";
-  });
-  // get order details from database
-  const getOrder = async () => {
-    const orders = [];
-    await getOrderData().then(async (res) => {
-      const response = res.data;
-      console.log(response);
-      for (const key in response) {
-        if (response[key]) {
-          const data = {
-            id: key,
-            userName: response[key].userName,
-            profileImage: response[key].profileImage,
-            dateNtime: response[key].dateNtime,
-            price: response[key].price,
-            status: response[key].status,
-          };
-          orders.push(data);
-        }
-      }
-    });
-    setOrderData(orders);
-    setFilterData(orders);
-  };
   // const deleteOrder = async (id) => {
   //   await deleteOrderData(id);
 
@@ -109,6 +93,7 @@ export function MainSection() {
     await deleteOrderData(id);
 
     getOrder();
+
     setOrderData((orderData) => orderData.filter((data) => data.id !== id));
   };
 
@@ -156,6 +141,10 @@ export function MainSection() {
       setFilterData(filteredData);
     }
   };
+  useEffect(() => {
+    setDataLength(orderData.length);
+    // console.log(orderData.length);
+  }, [dataLength]);
   const orders = filterData?.map((data, index) => (
     <tr key={index}>
       <td>{index}</td>
@@ -184,17 +173,17 @@ export function MainSection() {
 
   useEffect(() => {
     getOrder();
+    setFilterData(orderData);
   }, []);
   useEffect(() => {
     setDataLength(orderData.length);
   }, [orderData]);
-  useEffect(() => {
-    setDispatchDataLength(dispatchOrders.length);
-  }, [dispatchOrders]);
-  useEffect(() => {
-    setPendingDataLength(pendingOrders.length);
-  }, [pendingOrders]);
-
+  // useEffect(() => {
+  //   setDispatchDataLength(dispatchOrders.length);
+  // }, [dispatchOrders]);
+  // useEffect(() => {
+  //   setPendingDataLength(pendingOrders.length);
+  // }, [pendingOrders]);
   return (
     <Container>
       <Grid grow gutter={5} gutterXs="md" gutterMd="xl" gutterXl={50}>

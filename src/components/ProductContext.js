@@ -2,9 +2,19 @@ import React, { createContext, useState, useEffect } from "react";
 import { getProductData, updateProductQuantity } from "../Service/OrderData";
 import axios from "axios";
 export const ProductContext = createContext();
-
+import { getOrderData } from "../Service/OrderData";
 export const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
+  const [orderData, setOrderData] = useState([]);
+  const [pendingDataLength, setPendingDataLength] = useState(0);
+  const [dispatchDataLength, setDispatchDataLength] = useState(0);
+  // filter data according to status
+  const pendingOrders = orderData.filter((res) => {
+    return res.status == "Pending";
+  });
+  const dispatchOrders = orderData.filter((res) => {
+    return res.status == "Dispatch";
+  });
   useEffect(() => {
     const fetchData = async () => {
       const fetchedProducts = [];
@@ -26,20 +36,33 @@ export const ProductProvider = ({ children }) => {
     };
     fetchData();
   }, []);
+  // get order details from database
+  const getOrder = async () => {
+    const orders = [];
+    await getOrderData().then(async (res) => {
+      const response = res.data;
+      // console.log(response);
+      for (const key in response) {
+        if (response[key]) {
+          const data = {
+            id: key,
+            userName: response[key].userName,
+            profileImage: response[key].profileImage,
+            dateNtime: response[key].dateNtime,
+            price: response[key].price,
+            status: response[key].status,
+          };
+          orders.push(data);
+        }
+      }
+    });
+    setOrderData(orders);
+  };
   const addProduct = (newProduct) => {
     setProducts((prevProducts) => [...prevProducts, newProduct]);
   };
 
   const decrementStock = async (productId) => {
-    // setProducts((prevProducts) => {
-    //   return prevProducts.map((product) => {
-
-    //     if (product.id === productId) {
-    //       return { ...product, productQuantity: product.productQuantity - 1 };
-    //     }
-    //     return product;
-    //   });
-    // });
     try {
       // Find the product in the products array
       const product = products.find((product) => product.id === productId);
@@ -86,7 +109,15 @@ export const ProductProvider = ({ children }) => {
       console.error("Failed to increment stock", error);
     }
   };
-
+  // useEffect(() => {
+  //   setDataLength(orderData.length);
+  // }, [orderData]);
+  useEffect(() => {
+    setDispatchDataLength(dispatchOrders.length);
+  }, [dispatchOrders]);
+  useEffect(() => {
+    setPendingDataLength(pendingOrders.length);
+  }, [pendingOrders]);
   return (
     <ProductContext.Provider
       value={{
@@ -95,6 +126,11 @@ export const ProductProvider = ({ children }) => {
         addProduct,
         decrementStock,
         incrementStock,
+        orderData,
+        setOrderData,
+        getOrder,
+        pendingDataLength,
+        dispatchDataLength,
       }}
     >
       {children}

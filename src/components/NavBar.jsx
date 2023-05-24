@@ -2,28 +2,20 @@ import { useState } from "react";
 import {
   createStyles,
   Navbar,
-  Group,
+  Text,
   Code,
   getStylesRef,
   rem,
 } from "@mantine/core";
 import {
-  IconBellRinging,
-  IconFingerprint,
-  IconKey,
   IconSettings,
-  Icon2fa,
-  IconDatabaseImport,
-  IconReceipt2,
-  IconSwitchHorizontal,
-  IconLogout,
   IconLayoutDashboard,
   IconShoppingCartPlus,
   IconHistory,
   IconMessage,
   IconBuildingStore,
 } from "@tabler/icons-react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
   //   header: {
@@ -67,6 +59,18 @@ const useStyles = createStyles((theme) => ({
         color: theme.colorScheme === "dark" ? theme.white : theme.black,
       },
     },
+    "&:active": {
+      backgroundColor: theme.fn.variant({
+        variant: "light",
+        color: theme.primaryColor,
+      }).background,
+      color: theme.fn.variant({ variant: "light", color: theme.primaryColor })
+        .color,
+      [`& .${getStylesRef("icon")}`]: {
+        color: theme.fn.variant({ variant: "light", color: theme.primaryColor })
+          .color,
+      },
+    },
   },
 
   linkIcon: {
@@ -106,31 +110,45 @@ export function NavbarSimple() {
   const { classes, cx } = useStyles();
   const [active, setActive] = useState("Billing");
 
-  const links = data.map((item, index) => (
-    <a
-      className={cx(classes.link, {
-        [classes.linkActive]: item.label === active,
-      })}
-      key={item.label}
-      onClick={(event) => {
-        event.preventDefault();
-        setActive(item.label);
-      }}
-    >
-      <item.icon className={classes.linkIcon} stroke={1.5} />
-      <span>{item.label}</span>
-    </a>
-  ));
+  // const links = data.map((item, index) => (
+  //   <a
+  //     className={cx(classes.link, {
+  //       [classes.linkActive]: item.label === active,
+  //     })}
+  //     key={item.label}
+  //     onClick={(event) => {
+  //       event.preventDefault();
+  //       setActive(item.label);
+  //     }}
+  //   >
+  //     <item.icon className={classes.linkIcon} stroke={1.5} />
+  //     <span>{item.label}</span>
+  //   </a>
+  // ));
 
   return (
     <Navbar height={700} width={{ sm: 300 }} p="md">
       <Navbar.Section grow>
-        {/* <Group className={classes.header} position="apart">
-          <MantineLogo size={28} />
-          <Code sx={{ fontWeight: 700 }}>v3.1.2</Code>
-        </Group> */}
-
-        {links}
+        <NavLink to="" className={classes.link}>
+          <IconLayoutDashboard />
+          <Text pl={10}>Live Orders</Text>
+        </NavLink>
+        <NavLink to="/order-form" className={classes.link}>
+          <IconShoppingCartPlus />
+          <Text pl={10}>Add New Order</Text>
+        </NavLink>
+        <NavLink to="/order-history" className={classes.link}>
+          <IconHistory />
+          <Text pl={10}>Order History</Text>
+        </NavLink>
+        <NavLink to="stock-management" className={classes.link}>
+          <IconBuildingStore />
+          <Text pl={10}>Available Stock</Text>
+        </NavLink>
+        <NavLink className={classes.link}>
+          <IconSettings />
+          <Text pl={10}>Settings</Text>
+        </NavLink>
       </Navbar.Section>
     </Navbar>
   );
