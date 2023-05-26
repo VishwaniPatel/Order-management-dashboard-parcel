@@ -12,6 +12,7 @@ import RegistrationForm from "./pages/Registration";
 import LoginForm from "./pages/Login";
 import OrderHistroy from "./components/OrderHistroy";
 import { ProductProvider } from "./components/ProductContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 // const router = createBrowserRouter([
 //   {
 //     path: "/",
@@ -69,16 +70,31 @@ function App() {
         })}
       >
         <Routes>
-          <Route path="/" element={<MainSection />}></Route>
-          <Route path="/dashboard" element={<MainSection />}></Route>
-          <Route path="/order-form" element={<AddOrderForm />}></Route>
-          <Route path="/edit-order/:id" element={<AddOrderForm />}></Route>
+          <Route path="/" element={<LoginForm />}></Route>
+          <Route
+            path="/dashboard"
+            element={<ProtectedRoute Component={MainSection} />}
+          ></Route>
+          <Route
+            path="/order-form"
+            element={<ProtectedRoute Component={AddOrderForm} />}
+          ></Route>
+          <Route
+            path="/edit-order/:id"
+            element={<ProtectedRoute Component={AddOrderForm} />}
+          ></Route>
           <Route
             path="/stock-management"
-            element={<ProductManagement />}
+            element={<ProtectedRoute Component={ProductManagement} />}
           ></Route>
-          <Route path="/order-history" element={<OrderHistroy />}></Route>
-          <Route path="/login" element={<LoginForm />}></Route>
+          <Route
+            path="/order-history"
+            element={<ProtectedRoute Component={OrderHistroy} />}
+          ></Route>
+          <Route
+            path="/login"
+            element={<ProtectedRoute Component={LoginForm} />}
+          ></Route>
           <Route path="/register" element={<RegistrationForm />}></Route>
           {/* <Route path="/company-form" element={<ProductManagement />}>
           <Route path="add" element={<CompanyForm />}></Route>

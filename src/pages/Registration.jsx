@@ -1,11 +1,10 @@
 import React from "react";
-import { Formik, Field, Form, ErrorMessage } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import Input from "../components/Registration/Input";
 import FormikControl from "../components/Registration/FormikControl";
-import { TextInput, Button } from "@mantine/core";
+import { Button } from "@mantine/core";
+import { addUserData } from "../Service/OrderData";
 import { useNavigate } from "react-router-dom";
-import TextError from "../components/TextError";
 const RegistrationForm = () => {
   const navigate = useNavigate();
   const initialValues = {
@@ -30,6 +29,7 @@ const RegistrationForm = () => {
     }),
   });
   const handleSubmit = (values) => {
+    addUserData(values);
     // Handle form submission logic here
     console.log("Form data", values);
     navigate("/login");

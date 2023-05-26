@@ -41,7 +41,6 @@ export const ProductProvider = ({ children }) => {
     const orders = [];
     await getOrderData().then(async (res) => {
       const response = res.data;
-      // console.log(response);
       for (const key in response) {
         if (response[key]) {
           const data = {

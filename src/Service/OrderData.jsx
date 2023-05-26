@@ -5,6 +5,10 @@ const orders =
 
 const products =
   "https://order-management-dashboard-default-rtdb.firebaseio.com/products.json";
+
+const users =
+  "https://order-management-dashboard-default-rtdb.firebaseio.com/users.json";
+
 // to get order details
 export const getOrderData = async () => {
   return await axios.get(`${orders}`);
@@ -53,4 +57,14 @@ export const updateProductQuantity = async (productId, data) => {
     `https://order-management-dashboard-default-rtdb.firebaseio.com/products/${productId}/productQuantity.json`,
     data
   );
+};
+
+// to get user details
+export const getUserData = async () => {
+  return await axios.get(`${users}`);
+};
+
+// to add user detail
+export const addUserData = async (user) => {
+  return await axios.post(`${users}`, user);
 };
