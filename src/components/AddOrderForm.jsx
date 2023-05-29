@@ -110,7 +110,7 @@ function AddOrderForm() {
     if (id) {
       patchOrderData(id, order);
     }
-    // whene new order is added
+    // when new order is added
     else {
       addOrderData(order);
     }

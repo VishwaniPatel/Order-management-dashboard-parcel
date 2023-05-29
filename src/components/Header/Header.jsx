@@ -9,11 +9,14 @@ import {
   Transition,
   rem,
   Avatar,
+  Menu,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import Logo from "../Logo";
-import { IconBellFilled } from "@tabler/icons-react";
+import { IconBellFilled, IconLogout } from "@tabler/icons-react";
 import Profile from "../../assets/images/Profile.png";
+
+import { useNavigate } from "react-router-dom";
 const HEADER_HEIGHT = rem(60);
 
 const useStyles = createStyles((theme) => ({
@@ -102,7 +105,11 @@ const useStyles = createStyles((theme) => ({
 export function HeaderResponsive({ links }) {
   const [opened, { toggle, close }] = useDisclosure(false);
   const { classes, cx } = useStyles();
-
+  const navigate = useNavigate();
+  const logOut = () => {
+    localStorage.clear();
+    navigate("/login");
+  };
   return (
     <Header height={HEADER_HEIGHT} className={classes.root}>
       <Container className={classes.header}>
@@ -111,15 +118,17 @@ export function HeaderResponsive({ links }) {
           {items}
         </Group> */}
         <Group>
-          {/* <Menu shadow="md" width={120} position="bottom-end">
-          <Menu.Target>
-            <IconDotsVertical />
-          </Menu.Target>
-          <MenuDropdown data={data} onDataReceived={handleDataReceived} />
-        </Menu> */}
-
           <IconBellFilled />
-          <Avatar radius="xl" src={Profile} alt="it's me" />
+          <Menu shadow="md" width={120} position="bottom-end">
+            <Menu.Target>
+              <Avatar radius="xl" src={Profile} alt="it's me" />
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Item onClick={logOut} icon={<IconLogout size={14} />}>
+                Logout
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
         </Group>
         <Burger
           opened={opened}

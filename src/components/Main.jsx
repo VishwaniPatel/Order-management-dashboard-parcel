@@ -15,6 +15,7 @@ import {
   Input,
   Grid,
   Space,
+  ScrollArea,
 } from "@mantine/core";
 // import { BehaviorSubject } from "rxjs";
 import { useState, useEffect, useContext } from "react";
@@ -249,7 +250,7 @@ export function MainSection() {
         </Group>
       </Flex>
       <Space h="lg" />
-      <Table striped highlightOnHover>
+      <Table striped highlightOnHover component={ScrollArea}>
         <thead>
           <tr>
             <th>Sr. No.</th>

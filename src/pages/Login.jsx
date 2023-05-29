@@ -26,7 +26,7 @@ const LoginForm = () => {
 
     if (matchedUser) {
       localStorage.setItem("isAuthenticated", true);
-      navigate("/dashboard");
+      navigate("/");
     } else {
       return alert("Invalid Credentials. Try again.");
     }
