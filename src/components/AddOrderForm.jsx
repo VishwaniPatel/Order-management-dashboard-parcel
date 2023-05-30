@@ -15,7 +15,7 @@ import {
   getOrderById,
   patchOrderData,
 } from "../Service/OrderData";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 function AddOrderForm() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedValue, setSelectedOption] = useState(null);
@@ -29,7 +29,7 @@ function AddOrderForm() {
   const [size, setSize] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams();
-
+  const navigate = useNavigate();
   // fetch data from database to get order detail
   useEffect(() => {
     async function fetchData() {
@@ -56,6 +56,8 @@ function AddOrderForm() {
     setPriceValue(event.target.value);
   };
   const dateChangeHandler = (date) => {
+    console.log(typeof date);
+    console.log(new Intl.DateTimeFormat("en-US").format(date));
     setSelectedDate(date);
   };
   const selectChangeHandler = (option) => {
@@ -118,16 +120,17 @@ function AddOrderForm() {
     setSelectedDate("");
     setUserNameValue("");
     setPriceValue("");
+    navigate("/");
   };
-  const onChange = (e) => {
-    console.log("file", e?.target?.files[0]);
-    let file = e?.target?.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = _handleReaderLoaded;
-      reader.readAsBinaryString(file);
-    }
-  };
+  // const onChange = (e) => {
+  //   console.log("file", e?.target?.files[0]);
+  //   let file = e?.target?.files[0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onload = _handleReaderLoaded;
+  //     reader.readAsBinaryString(file);
+  //   }
+  // };
 
   const _handleReaderLoaded = (readerEvt) => {
     let binaryString = readerEvt.target.result;
@@ -151,7 +154,7 @@ function AddOrderForm() {
   };
   return (
     <Box maw={300} mx="auto">
-      <form onSubmit={submitHandler} onChange={(e) => onChange(e)}>
+      <form onSubmit={submitHandler}>
         <TextInput
           label="Name"
           placeholder="Name"

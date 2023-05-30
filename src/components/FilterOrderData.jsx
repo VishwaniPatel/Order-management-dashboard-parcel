@@ -1,13 +1,5 @@
 import React from "react";
 import { Menu, Button, Text } from "@mantine/core";
-import {
-  IconSettings,
-  IconSearch,
-  IconPhoto,
-  IconMessageCircle,
-  IconTrash,
-  IconArrowsLeftRight,
-} from "@tabler/icons-react";
 
 function FilterOrderData(props) {
   const onFilter = (id) => (event) => {

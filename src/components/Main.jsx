@@ -7,9 +7,7 @@ import {
   Table,
   Menu,
   Text,
-  Modal,
   Group,
-  Button,
   Image,
   Flex,
   Input,
@@ -25,11 +23,7 @@ import {
   IconShoppingBag,
   IconTruckDelivery,
 } from "@tabler/icons-react";
-import {
-  getOrderData,
-  deleteOrderData,
-  getOrderById,
-} from "../Service/OrderData.jsx";
+import { deleteOrderData } from "../Service/OrderData.jsx";
 import { ProductContext } from "./ProductContext.js";
 import MenuDropdown from "./MenuDropdown.jsx";
 import FilterOrderData from "./FilterOrderData.jsx";
@@ -95,12 +89,11 @@ export function MainSection() {
 
     getOrder();
 
-    setOrderData((orderData) => orderData.filter((data) => data.id !== id));
+    // setOrderData((orderData) => orderData.filter((data) => data.id !== id));
   };
 
   const handleSearchChange = (event) => {
     const value = event?.target?.value?.toLowerCase();
-    console.log(value);
     setSearchQuery(value);
     const filteredData = filterData.filter(
       (item) =>
@@ -119,7 +112,6 @@ export function MainSection() {
    * @param {status id} id
    */
   const onFilterData = (id) => {
-    console.log(id);
     if (id === 0) {
       setFilterData(orderData);
     }

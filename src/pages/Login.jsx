@@ -1,25 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { Formik, Form, Field } from "formik";
-import { TextInput, Button, Alert } from "@mantine/core";
+import {
+  TextInput,
+  Button,
+  Container,
+  Box,
+  Space,
+  Flex,
+  Center,
+} from "@mantine/core";
 import { getUserData } from "../Service/OrderData";
-import { IconAlertCircle } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
+import Logo from "../components/Logo";
 const LoginForm = () => {
   const navigate = useNavigate();
   const [registeredData, setRegisteredData] = useState([]);
-  const getUser = async () => {
-    await getUserData().then((res) => {
-      // registeredData = res.data;
-      setRegisteredData(res.data);
-    });
-  };
-  const checkLoginData = async (loginData) => {
-    // Retrieve the registered data from your database
-    getUser();
-    console.log("Register data", registeredData);
+
+  const checkLoginData = (loginData) => {
     const email = loginData.email;
     const password = loginData.password;
-    // Compare the provided login values with the registered data
+
     const matchedUser = Object.values(registeredData).find(
       (user) => user.email === email && user.password === password
     );
@@ -28,54 +28,101 @@ const LoginForm = () => {
       localStorage.setItem("isAuthenticated", true);
       navigate("/");
     } else {
-      return alert("Invalid Credentials. Try again.");
+      alert("Invalid Credentials. Try again.");
     }
   };
+
   const handleSubmit = (values) => {
-    // Handle form submission here
     checkLoginData(values);
   };
+
   useEffect(() => {
+    const sessionDuration = 1 * 60 * 1000; // 1 hour in milliseconds
+
+    const handleUserInteraction = () => {
+      localStorage.setItem("lastInteraction", Date.now());
+    };
+
+    const checkSessionTimeout = () => {
+      const lastInteraction = localStorage.getItem("lastInteraction");
+      const currentTime = Date.now();
+
+      if (currentTime - lastInteraction >= sessionDuration) {
+        logout();
+      }
+    };
+
+    const logout = () => {
+      localStorage.clear();
+      navigate("/login");
+    };
+
+    const initTimeout = () => {
+      document.addEventListener("mousemove", handleUserInteraction);
+      document.addEventListener("keydown", handleUserInteraction);
+      setInterval(checkSessionTimeout, 1000); // Check session timeout every second
+    };
+
+    const getUser = async () => {
+      await getUserData().then((res) => {
+        setRegisteredData(res.data);
+      });
+    };
+
     getUser();
+
+    if (localStorage.getItem("isAuthenticated")) {
+      localStorage.setItem("lastInteraction", Date.now());
+      initTimeout();
+    }
   }, []);
+
   return (
-    <Formik
-      initialValues={{
-        email: "",
-        password: "",
-      }}
-      onSubmit={handleSubmit}
-    >
-      {({ isSubmitting }) => (
-        <Form>
-          <Field name="email">
-            {({ field, form }) => (
-              <TextInput
-                {...field}
-                type="email"
-                label="Email"
-                placeholder="Enter your email address"
-                error={form.touched.email && form.errors.email}
-              />
-            )}
-          </Field>
-          <Field name="password">
-            {({ field, form }) => (
-              <TextInput
-                {...field}
-                type="password"
-                label="Password"
-                placeholder="Enter your password"
-                error={form.touched.password && form.errors.password}
-              />
-            )}
-          </Field>
-          <Button type="submit" variant="filled">
-            Submit
-          </Button>
-        </Form>
-      )}
-    </Formik>
+    <Flex justify={"center"} align={"center"}>
+      <Box maw={400} mx="auto">
+        <Flex justify={"center"}>
+          <Logo />
+        </Flex>
+
+        <Formik
+          initialValues={{
+            email: "",
+            password: "",
+          }}
+          onSubmit={handleSubmit}
+        >
+          {({ isSubmitting }) => (
+            <Form>
+              <Field name="email">
+                {({ field }) => (
+                  <TextInput
+                    {...field}
+                    type="email"
+                    label="Email"
+                    placeholder="Enter your email address"
+                  />
+                )}
+              </Field>
+              <Space h="md"></Space>
+              <Field name="password">
+                {({ field }) => (
+                  <TextInput
+                    {...field}
+                    type="password"
+                    label="Password"
+                    placeholder="Enter your password"
+                  />
+                )}
+              </Field>
+              <Space h="md"></Space>
+              <Button type="submit" variant="filled" disabled={isSubmitting}>
+                Submit
+              </Button>
+            </Form>
+          )}
+        </Formik>
+      </Box>
+    </Flex>
   );
 };
 

@@ -1,6 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
 import { getProductData, updateProductQuantity } from "../Service/OrderData";
-import axios from "axios";
 export const ProductContext = createContext();
 import { getOrderData } from "../Service/OrderData";
 export const ProductProvider = ({ children }) => {
@@ -43,11 +42,17 @@ export const ProductProvider = ({ children }) => {
       const response = res.data;
       for (const key in response) {
         if (response[key]) {
+          const date = new Date(response[key].dateNtime);
+
+          const formattedDate = new Intl.DateTimeFormat(["ban", "id"]).format(
+            date
+          );
+
           const data = {
             id: key,
             userName: response[key].userName,
             profileImage: response[key].profileImage,
-            dateNtime: response[key].dateNtime,
+            dateNtime: formattedDate,
             price: response[key].price,
             status: response[key].status,
           };
