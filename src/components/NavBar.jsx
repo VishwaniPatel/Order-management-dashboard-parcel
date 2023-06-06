@@ -18,22 +18,6 @@ import {
 import { Link, NavLink } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
-  //   header: {
-  //     paddingBottom: theme.spacing.md,
-  //     marginBottom: `calc(${theme.spacing.md} * 1.5)`,
-  //     borderBottom: `${rem(1)} solid ${
-  //       theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[2]
-  //     }`,
-  //   },
-
-  //   footer: {
-  //     paddingTop: theme.spacing.md,
-  //     marginTop: theme.spacing.md,
-  //     borderTop: `${rem(1)} solid ${
-  //       theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[2]
-  //     }`,
-  //   },
-
   link: {
     ...theme.fn.focusStyles(),
     display: "flex",
@@ -129,15 +113,15 @@ export function NavbarSimple() {
   return (
     <Navbar height={700} width={{ sm: 300 }} p="md">
       <Navbar.Section grow>
-        <NavLink to="" className={classes.link}>
+        <NavLink to="dashboard" className={classes.link}>
           <IconLayoutDashboard />
           <Text pl={10}>Live Orders</Text>
         </NavLink>
-        <NavLink to="/order-form" className={classes.link}>
+        <NavLink to="order-form" className={classes.link}>
           <IconShoppingCartPlus />
           <Text pl={10}>Add New Order</Text>
         </NavLink>
-        <NavLink to="/order-history" className={classes.link}>
+        <NavLink to=" order-history" className={classes.link}>
           <IconHistory />
           <Text pl={10}>Order History</Text>
         </NavLink>

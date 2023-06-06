@@ -5,15 +5,13 @@ import { useDisclosure } from "@mantine/hooks";
 import { IconTrash, IconEdit } from "@tabler/icons-react";
 function MenuDropdown(props) {
   const [opened, { open, close }] = useDisclosure(false);
+  const id = props.data.id;
   const deleteOrder = (id) => {
     props.onDataReceived(id);
+    close();
   };
-  const id = props.data.id;
   return (
-    <Menu.Dropdown>
-      <Link to={"/edit-order/" + id}>
-        <Menu.Item icon={<IconEdit size={14} />}>Edit</Menu.Item>
-      </Link>
+    <>
       <Modal
         opened={opened}
         onClose={close}
@@ -21,25 +19,28 @@ function MenuDropdown(props) {
         centered
       >
         <Group position="center">
-          <Button onClick={() => deleteOrder(id)} title="Title">
-            Delete
-          </Button>
-          <Button onClick={close} color="gray" title="Title">
+          <Button onClick={() => deleteOrder(id)}>Delete</Button>
+          <Button onClick={close} color="gray">
             Cancel
           </Button>
         </Group>
       </Modal>
-      <Group position="center">
+
+      <Menu.Dropdown>
+        <Link to={"/edit-order/" + id}>
+          <Menu.Item icon={<IconEdit size={14} />}>Edit</Menu.Item>
+        </Link>
+
         <Menu.Item
           icon={<IconTrash size={14} />}
           onClick={open}
-          title="Title"
+
           // onClick={deleteOrder.bind(null, data.id)}
         >
           Delete
         </Menu.Item>
-      </Group>
-    </Menu.Dropdown>
+      </Menu.Dropdown>
+    </>
   );
 }
 

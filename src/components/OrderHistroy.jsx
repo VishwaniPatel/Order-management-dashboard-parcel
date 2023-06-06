@@ -6,11 +6,14 @@ import {
 } from "@tabler/icons-react";
 import { Container, rem, Card, Text, Grid, Space } from "@mantine/core";
 import { ProductContext } from "./ProductContext";
+import useOrderData from "../hook/GetOrderData";
 
 const OrderHistory = () => {
-  const { orderData, pendingDataLength, dispatchDataLength } =
-    useContext(ProductContext);
+  const orderData = useOrderData();
+  // const { orderData, pendingDataLength, dispatchDataLength } =
+  //   useContext(ProductContext);
   const dataLength = orderData.length;
+
   //  const pendingOrders = orderData.filter((res) => {
   //   return res.status == "Pending";
   // });
@@ -38,7 +41,8 @@ const OrderHistory = () => {
               Total Pending Orders
             </Text>
             <Text fz="sm" c="dimmed" mt="sm">
-              {pendingDataLength}
+              {/* {pendingDataLength} */}
+              {dataLength}
             </Text>
           </Card>
         </Grid.Col>
@@ -49,7 +53,8 @@ const OrderHistory = () => {
               Total Dispatch Orders
             </Text>
             <Text fz="sm" c="dimmed" mt="sm">
-              {dispatchDataLength}
+              {/* {dispatchDataLength} */}
+              {dataLength}
             </Text>
           </Card>
         </Grid.Col>

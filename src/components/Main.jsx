@@ -14,6 +14,7 @@ import {
   Grid,
   Space,
   ScrollArea,
+  TextInput,
 } from "@mantine/core";
 // import { BehaviorSubject } from "rxjs";
 import { useState, useEffect, useContext } from "react";
@@ -27,6 +28,8 @@ import { deleteOrderData } from "../Service/OrderData.jsx";
 import { ProductContext } from "./ProductContext.js";
 import MenuDropdown from "./MenuDropdown.jsx";
 import FilterOrderData from "./FilterOrderData.jsx";
+import useOrderData from "../hook/GetOrderData.jsx";
+import useSearch from "../hook/useSearch.jsx";
 
 const useStyles = createStyles((theme) => ({
   title: {
@@ -58,54 +61,32 @@ const useStyles = createStyles((theme) => ({
 // export const dataLengthSubject = new BehaviorSubject(0);
 export function MainSection() {
   const { classes, theme } = useStyles();
-  // const [orderData, setOrderData] = useState([]);
-  const { orderData, getOrder, pendingDataLength, dispatchDataLength } =
-    useContext(ProductContext);
-
-  const [filterData, setFilterData] = useState();
+  const { pendingDataLength, dispatchDataLength } = useContext(ProductContext);
+  const orderData = useOrderData();
+  const [filterData, setFilterData] = useState(orderData);
   const [dataLength, setDataLength] = useState(0);
-  // const [pendingDataLength, setPendingDataLength] = useState(0);
-  // const [dispatchDataLength, setDispatchDataLength] = useState(0);
-  const [searchQuery, setSearchQuery] = useState("");
-  // const orderDataS = orderData;
-  // // filter data according to status
-  // const pendingOrders = orderData.filter((res) => {
-  //   return res.status == "Pending";
-  // });
-  // const dispatchOrders = orderData.filter((res) => {
-  //   return res.status == "Dispatch";
-  // });
-
-  // const deleteOrder = async (id) => {
-  //   await deleteOrderData(id);
-
-  //   getOrder();
-  //   setOrderData((orderData) => orderData.filter((data) => data.id !== id));
-  // };
+  // const [searchQuery, setSearchQuery] = useState("");
 
   // delete selected order data
   const handleDataReceived = async (id) => {
     await deleteOrderData(id);
-
-    getOrder();
-
-    // setOrderData((orderData) => orderData.filter((data) => data.id !== id));
+    // Update the orderData state if necessary
+    setOrderData((prevOrderData) =>
+      prevOrderData.filter((data) => data.id !== id)
+    );
   };
 
   const handleSearchChange = (event) => {
-    const value = event?.target?.value?.toLowerCase();
-    setSearchQuery(value);
-    const filteredData = filterData.filter(
-      (item) =>
-        item.status?.toLowerCase().includes(value) ||
-        item.userName.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    // const value = event?.target?.value?.toLowerCase();
+    // setSearchQuery(value);
+    // const filteredData = filterData.filter(
+    //   (item) =>
+    //     item.status?.toLowerCase().includes(value) ||
+    //     item.userName.toLowerCase().includes(value)
+    // );
+    const filteredData = useSearch(event);
     setFilterData(filteredData);
   };
-  // const filteredList = orderData.filter(
-  //   (item) => console.log(item)
-  //   // item.name.toLowerCase().includes(searchQuery.toLowerCase())
-  // );
 
   /**
    * filter data according to function
@@ -134,14 +115,10 @@ export function MainSection() {
       setFilterData(filteredData);
     }
   };
-  useEffect(() => {
-    setDataLength(orderData.length);
-    // console.log(orderData.length);
-  }, [dataLength]);
+
   const orders = filterData?.map((data, index) => (
     <tr key={index}>
       <td>{index}</td>
-
       <td>
         <Group>
           <Image maw={40} radius="md" src={data.profileImage} alt="user" />
@@ -165,18 +142,10 @@ export function MainSection() {
   ));
 
   useEffect(() => {
-    getOrder();
     setFilterData(orderData);
-  }, []);
-  useEffect(() => {
     setDataLength(orderData.length);
   }, [orderData]);
-  // useEffect(() => {
-  //   setDispatchDataLength(dispatchOrders.length);
-  // }, [dispatchOrders]);
-  // useEffect(() => {
-  //   setPendingDataLength(pendingOrders.length);
-  // }, [pendingOrders]);
+
   return (
     <Container>
       <Grid grow gutter={5} gutterXs="md" gutterMd="xl" gutterXl={50}>
@@ -232,12 +201,6 @@ export function MainSection() {
           Orders
         </Text>
         <Group>
-          <Input
-            type="text"
-            placeholder="Search here"
-            value={searchQuery}
-            onChange={handleSearchChange}
-          />
           <FilterOrderData onDataReceived={onFilterData} />
         </Group>
       </Flex>

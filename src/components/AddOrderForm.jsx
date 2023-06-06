@@ -9,13 +9,14 @@ import {
 import { DateInput } from "@mantine/dates";
 import { useForm, isNotEmpty } from "@mantine/form";
 import useInput from "./use-input";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import {
   addOrderData,
   getOrderById,
   patchOrderData,
 } from "../Service/OrderData";
 import { useParams, useNavigate } from "react-router-dom";
+import { ProductContext } from "./ProductContext.js";
 function AddOrderForm() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedValue, setSelectedOption] = useState(null);
@@ -27,9 +28,9 @@ function AddOrderForm() {
   const [base64, setBase64] = useState("");
   const [name, setName] = useState("");
   const [size, setSize] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
+  const { getOrder } = useContext(ProductContext);
   // fetch data from database to get order detail
   useEffect(() => {
     async function fetchData() {
@@ -152,6 +153,9 @@ function AddOrderForm() {
       reader.readAsDataURL(file);
     }
   };
+  // useEffect(() => {
+  //   getOrder();
+  // }, []);
   return (
     <Box maw={300} mx="auto">
       <form onSubmit={submitHandler}>
