@@ -30,6 +30,7 @@ import MenuDropdown from "./MenuDropdown.jsx";
 import FilterOrderData from "./FilterOrderData.jsx";
 import useOrderData from "../hook/GetOrderData.jsx";
 import useSearch from "../hook/useSearch.jsx";
+import SearchBox from "./SearchBox.jsx";
 
 const useStyles = createStyles((theme) => ({
   title: {
@@ -66,7 +67,10 @@ export function MainSection() {
   const [filterData, setFilterData] = useState(orderData);
   const [dataLength, setDataLength] = useState(0);
   // const [searchQuery, setSearchQuery] = useState("");
-
+  const handleSearch = (search) => {
+    const filterSearchData = useSearch(orderData, search);
+    setFilterData(filterSearchData);
+  };
   // delete selected order data
   const handleDataReceived = async (id) => {
     await deleteOrderData(id);
@@ -74,18 +78,6 @@ export function MainSection() {
     setOrderData((prevOrderData) =>
       prevOrderData.filter((data) => data.id !== id)
     );
-  };
-
-  const handleSearchChange = (event) => {
-    // const value = event?.target?.value?.toLowerCase();
-    // setSearchQuery(value);
-    // const filteredData = filterData.filter(
-    //   (item) =>
-    //     item.status?.toLowerCase().includes(value) ||
-    //     item.userName.toLowerCase().includes(value)
-    // );
-    const filteredData = useSearch(event);
-    setFilterData(filteredData);
   };
 
   /**
@@ -201,6 +193,7 @@ export function MainSection() {
           Orders
         </Text>
         <Group>
+          <SearchBox onSearch={handleSearch} />
           <FilterOrderData onDataReceived={onFilterData} />
         </Group>
       </Flex>

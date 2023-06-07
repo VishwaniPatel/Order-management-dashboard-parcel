@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Formik, Form, Field } from "formik";
-import {
-  TextInput,
-  Button,
-  Container,
-  Box,
-  Space,
-  Flex,
-  Center,
-} from "@mantine/core";
+import { TextInput, Button, Box, Space, Flex } from "@mantine/core";
 import { getUserData } from "../Service/OrderData";
 import { useNavigate } from "react-router-dom";
 import Logo from "../components/Logo";
+import * as Yup from "yup";
+const LoginSchema = Yup.object().shape({
+  email: Yup.string().email("Invalid email").required("Required"),
+  password: Yup.string()
+    .min(6, "Too Short!")
+    .max(10, "Too Long!")
+    .required("Required"),
+});
 const LoginForm = () => {
   const navigate = useNavigate();
   const [registeredData, setRegisteredData] = useState([]);
@@ -89,9 +89,10 @@ const LoginForm = () => {
             email: "",
             password: "",
           }}
+          validationSchema={LoginSchema}
           onSubmit={handleSubmit}
         >
-          {({ isSubmitting }) => (
+          {({ errors, touched }) => (
             <Form>
               <Field name="email">
                 {({ field }) => (
@@ -103,6 +104,7 @@ const LoginForm = () => {
                   />
                 )}
               </Field>
+              {errors.email && touched.email ? <div>{errors.email}</div> : null}
               <Space h="md"></Space>
               <Field name="password">
                 {({ field }) => (
@@ -114,8 +116,11 @@ const LoginForm = () => {
                   />
                 )}
               </Field>
+              {errors.password && touched.password ? (
+                <div>{errors.password}</div>
+              ) : null}
               <Space h="md"></Space>
-              <Button type="submit" variant="filled" disabled={isSubmitting}>
+              <Button type="submit" variant="filled">
                 Submit
               </Button>
             </Form>

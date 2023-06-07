@@ -82,33 +82,8 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const data = [
-  { link: "/", label: "Live Orders", icon: IconLayoutDashboard },
-  { link: "/order-form", label: "Add New Order", icon: IconShoppingCartPlus },
-  { link: "/", label: "Order History", icon: IconHistory },
-  { link: "/", label: "Available Stock", icon: IconBuildingStore },
-  { link: "/", label: "Settings", icon: IconSettings },
-];
-
 export function NavbarSimple() {
-  const { classes, cx } = useStyles();
-  const [active, setActive] = useState("Billing");
-
-  // const links = data.map((item, index) => (
-  //   <a
-  //     className={cx(classes.link, {
-  //       [classes.linkActive]: item.label === active,
-  //     })}
-  //     key={item.label}
-  //     onClick={(event) => {
-  //       event.preventDefault();
-  //       setActive(item.label);
-  //     }}
-  //   >
-  //     <item.icon className={classes.linkIcon} stroke={1.5} />
-  //     <span>{item.label}</span>
-  //   </a>
-  // ));
+  const { classes } = useStyles();
 
   return (
     <Navbar height={700} width={{ sm: 300 }} p="md">

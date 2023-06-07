@@ -1,21 +1,13 @@
-import React, { useEffect, useState } from "react";
-
-const useSearch = () => {
-  const [searchQuery, setSearchQuery] = useState(null);
-  useEffect(() => {
-    handleSearchChange();
-  }, [searchQuery]);
-  const handleSearchChange = (event) => {
-    const value = event?.target?.value?.toLowerCase();
-    const filteredData = value.filter(
+const useSearch = (data, value) => {
+  if (value === " ") {
+    return data;
+  } else {
+    const filteredData = data.filter(
       (item) =>
         item.status?.toLowerCase().includes(value) ||
         item.userName.toLowerCase().includes(value)
     );
-    setSearchQuery(filteredData);
-    // setFilterData(filteredData);
-  };
-  return searchQuery;
+    return filteredData;
+  }
 };
-
 export default useSearch;

@@ -2,10 +2,11 @@ import React, { useState, useMemo, useEffect, useContext } from "react";
 import { ProductContext } from "./ProductContext";
 import { Table, Text, Group, ActionIcon, Skeleton } from "@mantine/core";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
+import useProductData from "../hook/useProductData";
 
 function GetProductData() {
-  const { products, decrementStock, incrementStock } =
-    useContext(ProductContext);
+  const { decrementStock, incrementStock } = useContext(ProductContext);
+  const products = useProductData();
   const [loading, setLoading] = useState(true);
   const totalStock = useMemo(() => {
     return products.reduce(
