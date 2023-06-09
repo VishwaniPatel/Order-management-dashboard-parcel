@@ -5,7 +5,6 @@ import {
   IconTruckDelivery,
 } from "@tabler/icons-react";
 import { Container, rem, Card, Text, Grid, Space } from "@mantine/core";
-import { ProductContext } from "./ProductContext";
 import useOrderData from "../hook/GetOrderData";
 
 const OrderHistory = () => {
@@ -13,13 +12,28 @@ const OrderHistory = () => {
   // const { orderData, pendingDataLength, dispatchDataLength } =
   //   useContext(ProductContext);
   const dataLength = orderData.length;
+  const [pendingDataLength, setPendingDataLength] = useState(0);
+  const [dispatchDataLength, setDispatchDataLength] = useState(0);
 
+  // filter data according to status
+  const pendingOrders = orderData.filter((res) => {
+    return res.status == "Pending";
+  });
+  const dispatchOrders = orderData.filter((res) => {
+    return res.status == "Dispatch";
+  });
   //  const pendingOrders = orderData.filter((res) => {
   //   return res.status == "Pending";
   // });
   // const dispatchOrders = orderData.filter((res) => {
   //   return res.status == "Dispatch";
   // });
+  useEffect(() => {
+    setDispatchDataLength(dispatchOrders.length);
+  }, [dispatchOrders]);
+  useEffect(() => {
+    setPendingDataLength(pendingOrders.length);
+  }, [pendingOrders]);
   return (
     <Container>
       <Grid grow gutter={5} gutterXs="md" gutterMd="xl" gutterXl={50}>
@@ -41,8 +55,8 @@ const OrderHistory = () => {
               Total Pending Orders
             </Text>
             <Text fz="sm" c="dimmed" mt="sm">
-              {/* {pendingDataLength} */}
-              {dataLength}
+              {pendingDataLength}
+              {/* {dataLength} */}
             </Text>
           </Card>
         </Grid.Col>
@@ -53,8 +67,8 @@ const OrderHistory = () => {
               Total Dispatch Orders
             </Text>
             <Text fz="sm" c="dimmed" mt="sm">
-              {/* {dispatchDataLength} */}
-              {dataLength}
+              {dispatchDataLength}
+              {/* {dataLength} */}
             </Text>
           </Card>
         </Grid.Col>

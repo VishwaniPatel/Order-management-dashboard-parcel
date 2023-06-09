@@ -27,18 +27,9 @@ const Routing = () => {
           // element={<ProtectedRoute Component={AddOrderForm} />}
           element={<AddOrderForm />}
         ></Route>
-        <Route
-          path="edit-order/:id"
-          element={<ProtectedRoute Component={AddOrderForm} />}
-        ></Route>
-        <Route
-          path="stock-management"
-          element={<ProtectedRoute Component={ProductManagement} />}
-        ></Route>
-        <Route
-          path="order-history"
-          element={<ProtectedRoute Component={OrderHistroy} />}
-        ></Route>
+        <Route path="edit-order/:id" element={<AddOrderForm />}></Route>
+        <Route path="stock-management" element={<ProductManagement />}></Route>
+        <Route path="order-history" element={<OrderHistroy />}></Route>
       </Route>
 
       <Route path="*" element={<PageNotFound />}></Route>

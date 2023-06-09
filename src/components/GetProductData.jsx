@@ -3,10 +3,13 @@ import { ProductContext } from "./ProductContext";
 import { Table, Text, Group, ActionIcon, Skeleton } from "@mantine/core";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
 import useProductData from "../hook/useProductData";
-
+import { getProductData, updateProductQuantity } from "../Service/OrderData";
 function GetProductData() {
-  const { decrementStock, incrementStock } = useContext(ProductContext);
-  const products = useProductData();
+  // const { decrementStock, incrementStock } = useContext(ProductContext);
+  const product = useProductData();
+
+  const [products, setProducts] = useState(product);
+  console.log(products);
   const [loading, setLoading] = useState(true);
   const totalStock = useMemo(() => {
     return products.reduce(
@@ -14,7 +17,53 @@ function GetProductData() {
       0
     );
   }, [products]);
+  const decrementStock = async (productId) => {
+    try {
+      // Find the product in the products array
+      const product = products.find((product) => product.id === productId);
 
+      if (product) {
+        // Decrease the quantity by 1
+        const newQuantity = product.productQuantity - 1;
+
+        // Make the API request to update the quantity
+        updateProductQuantity(productId, newQuantity);
+
+        // Update the product in the products array with the new quantity
+        setProducts((prevProducts) =>
+          prevProducts.map((p) =>
+            p.id === productId ? { ...p, productQuantity: newQuantity } : p
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Failed to decrement stock", error);
+    }
+  };
+
+  const incrementStock = async (productId) => {
+    try {
+      // Find the product in the products array
+      const product = products.find((product) => product.id === productId);
+
+      if (product) {
+        // Increase the quantity by 1
+        const newQuantity = product.productQuantity + 1;
+
+        // Make the API request to update the quantity
+        updateProductQuantity(productId, newQuantity);
+
+        // Update the product in the products array with the new quantity
+        setProducts((prevProducts) =>
+          prevProducts.map((p) =>
+            p.id === productId ? { ...p, productQuantity: newQuantity } : p
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Failed to increment stock", error);
+    }
+  };
   const productData = products?.map((product, index) => (
     <tr key={index}>
       <td>{index}</td>
@@ -33,6 +82,9 @@ function GetProductData() {
       </td>
     </tr>
   ));
+  useEffect(() => {
+    setProducts(product);
+  }, [product]);
   useEffect(() => {
     // Simulating fetching data from the database
     setTimeout(() => {

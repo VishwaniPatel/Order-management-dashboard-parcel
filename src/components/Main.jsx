@@ -25,7 +25,7 @@ import {
   IconTruckDelivery,
 } from "@tabler/icons-react";
 import { deleteOrderData } from "../Service/OrderData.jsx";
-import { ProductContext } from "./ProductContext.js";
+// import { ProductContext } from "./ProductContext.js";
 import MenuDropdown from "./MenuDropdown.jsx";
 import FilterOrderData from "./FilterOrderData.jsx";
 import useOrderData from "../hook/GetOrderData.jsx";
@@ -62,10 +62,13 @@ const useStyles = createStyles((theme) => ({
 // export const dataLengthSubject = new BehaviorSubject(0);
 export function MainSection() {
   const { classes, theme } = useStyles();
-  const { pendingDataLength, dispatchDataLength } = useContext(ProductContext);
-  const orderData = useOrderData();
+  // const { pendingDataLength, dispatchDataLength } = useContext(ProductContext);
+  const order = useOrderData();
+  const [orderData, setOrderData] = useState(order);
   const [filterData, setFilterData] = useState(orderData);
   const [dataLength, setDataLength] = useState(0);
+  const [pendingDataLength, setPendingDataLength] = useState(0);
+  const [dispatchDataLength, setDispatchDataLength] = useState(0);
   // const [searchQuery, setSearchQuery] = useState("");
   const handleSearch = (search) => {
     const filterSearchData = useSearch(orderData, search);
@@ -107,7 +110,13 @@ export function MainSection() {
       setFilterData(filteredData);
     }
   };
-
+  // filter data according to status
+  const pendingOrders = orderData.filter((res) => {
+    return res.status == "Pending";
+  });
+  const dispatchOrders = orderData.filter((res) => {
+    return res.status == "Dispatch";
+  });
   const orders = filterData?.map((data, index) => (
     <tr key={index}>
       <td>{index}</td>
@@ -132,12 +141,19 @@ export function MainSection() {
       </td>
     </tr>
   ));
-
+  useEffect(() => {
+    setOrderData(order);
+  }, [order]);
   useEffect(() => {
     setFilterData(orderData);
     setDataLength(orderData.length);
   }, [orderData]);
-
+  useEffect(() => {
+    setDispatchDataLength(dispatchOrders.length);
+  }, [dispatchOrders]);
+  useEffect(() => {
+    setPendingDataLength(pendingOrders.length);
+  }, [pendingOrders]);
   return (
     <Container>
       <Grid grow gutter={5} gutterXs="md" gutterMd="xl" gutterXl={50}>

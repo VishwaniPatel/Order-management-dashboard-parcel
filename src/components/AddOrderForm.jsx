@@ -30,7 +30,7 @@ function AddOrderForm() {
   const [size, setSize] = useState("");
   const { id } = useParams();
   const navigate = useNavigate();
-  const { getOrder } = useContext(ProductContext);
+
   // fetch data from database to get order detail
   useEffect(() => {
     async function fetchData() {

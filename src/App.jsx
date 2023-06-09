@@ -1,16 +1,14 @@
 import React from "react";
-import { ProductProvider } from "./components/ProductContext";
-import AppShell from "./components/AppShell";
-// import LoginForm from "./pages/Login";
-import AddOrderForm from "./components/AddOrderForm";
+
 import Routing from "./components/Routing";
+import SessionTimeout from "./components/SessionTimeOut";
+import { AuthProvider } from "./components/ProductContext";
 function App() {
   return (
-    <ProductProvider>
-      {/* <LoginForm /> */}
-      {/* <AddOrderForm /> */}
+    <AuthProvider>
       <Routing />
-    </ProductProvider>
+      <SessionTimeout />
+    </AuthProvider>
   );
 }
 

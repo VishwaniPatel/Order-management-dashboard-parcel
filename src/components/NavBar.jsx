@@ -96,7 +96,7 @@ export function NavbarSimple() {
           <IconShoppingCartPlus />
           <Text pl={10}>Add New Order</Text>
         </NavLink>
-        <NavLink to=" order-history" className={classes.link}>
+        <NavLink to="order-history" className={classes.link}>
           <IconHistory />
           <Text pl={10}>Order History</Text>
         </NavLink>

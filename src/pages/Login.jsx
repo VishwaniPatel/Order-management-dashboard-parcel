@@ -5,6 +5,7 @@ import { getUserData } from "../Service/OrderData";
 import { useNavigate } from "react-router-dom";
 import Logo from "../components/Logo";
 import * as Yup from "yup";
+import { useAuth } from "../components/ProductContext";
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Required"),
   password: Yup.string()
@@ -13,6 +14,7 @@ const LoginSchema = Yup.object().shape({
     .required("Required"),
 });
 const LoginForm = () => {
+  const { setAuthState } = useAuth();
   const navigate = useNavigate();
   const [registeredData, setRegisteredData] = useState([]);
 
@@ -26,7 +28,11 @@ const LoginForm = () => {
 
     if (matchedUser) {
       localStorage.setItem("isAuthenticated", true);
-      navigate("/order");
+      setAuthState((prevState) => ({
+        ...prevState,
+        isAuthenticated: true,
+      }));
+      navigate("/order/dashboard");
     } else {
       alert("Invalid Credentials. Try again.");
     }
@@ -37,31 +43,37 @@ const LoginForm = () => {
   };
 
   useEffect(() => {
-    const sessionDuration = 1 * 60 * 1000; // 1 hour in milliseconds
+    // if (localStorage.getItem("isAuthenticated")) {
+    //   initTimeout();
+    // }
+    // const sessionDuration = 1 * 60 * 1000; // 1 minute in milliseconds
 
-    const handleUserInteraction = () => {
-      localStorage.setItem("lastInteraction", Date.now());
-    };
+    // const handleUserInteraction = () => {
+    //   localStorage.setItem("LastInteraction", Date.now());
 
-    const checkSessionTimeout = () => {
-      const lastInteraction = localStorage.getItem("lastInteraction");
-      const currentTime = Date.now();
+    //   console.log("Working handleinteractin");
+    // };
 
-      if (currentTime - lastInteraction >= sessionDuration) {
-        logout();
-      }
-    };
+    // const checkSessionTimeout = () => {
+    //   const lastInteraction = localStorage.getItem("LastInteraction");
+    //   const currentTime = Date.now();
+    //   console.log("Working checkout");
+    //   if (currentTime - lastInteraction >= sessionDuration) {
+    //     logout();
+    //   }
+    // };
 
-    const logout = () => {
-      localStorage.clear();
-      navigate("/login");
-    };
+    // const logout = () => {
+    //   localStorage.clear();
+    //   navigate("/login");
+    // };
 
-    const initTimeout = () => {
-      document.addEventListener("mousemove", handleUserInteraction);
-      document.addEventListener("keydown", handleUserInteraction);
-      setInterval(checkSessionTimeout, 1000); // Check session timeout every second
-    };
+    // const initTimeout = () => {
+    //   document.addEventListener("mousemove", handleUserInteraction);
+    //   document.addEventListener("keydown", handleUserInteraction);
+    //   setInterval(checkSessionTimeout, 1000); // Check session timeout every second
+    //   console.log("Working inittimeout");
+    // };
 
     const getUser = async () => {
       await getUserData().then((res) => {
@@ -70,11 +82,6 @@ const LoginForm = () => {
     };
 
     getUser();
-
-    if (localStorage.getItem("isAuthenticated")) {
-      localStorage.setItem("lastInteraction", Date.now());
-      initTimeout();
-    }
   }, []);
 
   return (

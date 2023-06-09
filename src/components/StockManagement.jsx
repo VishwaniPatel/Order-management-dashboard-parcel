@@ -1,13 +1,14 @@
-import React, { useState, useContext } from "react";
-import { ProductContext } from "./ProductContext";
+import React, { useState } from "react";
 import { useForm, isNotEmpty } from "@mantine/form";
 import { Button, Box, Group, TextInput, Text } from "@mantine/core";
 import { addProductData } from "../Service/OrderData";
+import useProductData from "../hook/useProductData";
 function StockManagement() {
+  const product = useProductData();
+  const [products, setProducts] = useState(product);
   const [productNameValue, setProductNameValue] = useState("");
   const [productQuantity, setProductQuantity] = useState(0);
   const [productPrice, setProductPrice] = useState(0);
-  const { addProduct } = useContext(ProductContext);
   const productNameChangeHandler = (event) => {
     setProductNameValue(event.target.value);
   };
@@ -16,6 +17,9 @@ function StockManagement() {
   };
   const productPriceChangeHandler = (event) => {
     setProductPrice(event.target.value);
+  };
+  const addProduct = (newProduct) => {
+    setProducts((prevProducts) => [...prevProducts, newProduct]);
   };
 
   const handleSubmit = async (e) => {

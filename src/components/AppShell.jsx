@@ -2,7 +2,6 @@ import React from "react";
 import { AppShell, Navbar, Header, ScrollArea } from "@mantine/core";
 import { HeaderResponsive } from "./Header/Header";
 import { NavbarSimple } from "./NavBar";
-import Routing from "./Routing";
 import { Outlet } from "react-router-dom";
 const AppShellUI = () => {
   return (
