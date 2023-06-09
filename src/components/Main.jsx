@@ -10,13 +10,10 @@ import {
   Group,
   Image,
   Flex,
-  Input,
   Grid,
   Space,
   ScrollArea,
-  TextInput,
 } from "@mantine/core";
-// import { BehaviorSubject } from "rxjs";
 import { useState, useEffect, useContext } from "react";
 import {
   IconDotsVertical,
@@ -25,13 +22,12 @@ import {
   IconTruckDelivery,
 } from "@tabler/icons-react";
 import { deleteOrderData } from "../Service/OrderData.jsx";
-// import { ProductContext } from "./ProductContext.js";
 import MenuDropdown from "./MenuDropdown.jsx";
 import FilterOrderData from "./FilterOrderData.jsx";
 import useOrderData from "../hook/GetOrderData.jsx";
 import useSearch from "../hook/useSearch.jsx";
 import SearchBox from "./SearchBox.jsx";
-
+import useFilterData from "../hook/useFilterData.jsx";
 const useStyles = createStyles((theme) => ({
   title: {
     fontSize: rem(34),
@@ -59,17 +55,14 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-// export const dataLengthSubject = new BehaviorSubject(0);
 export function MainSection() {
   const { classes, theme } = useStyles();
-  // const { pendingDataLength, dispatchDataLength } = useContext(ProductContext);
   const order = useOrderData();
   const [orderData, setOrderData] = useState(order);
-  const [filterData, setFilterData] = useState(orderData);
   const [dataLength, setDataLength] = useState(0);
   const [pendingDataLength, setPendingDataLength] = useState(0);
   const [dispatchDataLength, setDispatchDataLength] = useState(0);
-  // const [searchQuery, setSearchQuery] = useState("");
+  const { filterData, filterOrders } = useFilterData(orderData);
   const handleSearch = (search) => {
     const filterSearchData = useSearch(orderData, search);
     setFilterData(filterSearchData);
@@ -83,33 +76,6 @@ export function MainSection() {
     );
   };
 
-  /**
-   * filter data according to function
-   * @param {status id} id
-   */
-  const onFilterData = (id) => {
-    if (id === 0) {
-      setFilterData(orderData);
-    }
-    if (id === 1) {
-      const filteredData = orderData.filter((res) => {
-        return res.status == "Pending";
-      });
-      setFilterData(filteredData);
-    }
-    if (id === 2) {
-      const filteredData = orderData.filter((res) => {
-        return res.status == "Dispatch";
-      });
-      setFilterData(filteredData);
-    }
-    if (id === 3) {
-      const filteredData = orderData.filter((res) => {
-        return res.status == "Completed";
-      });
-      setFilterData(filteredData);
-    }
-  };
   // filter data according to status
   const pendingOrders = orderData.filter((res) => {
     return res.status == "Pending";
@@ -145,7 +111,7 @@ export function MainSection() {
     setOrderData(order);
   }, [order]);
   useEffect(() => {
-    setFilterData(orderData);
+    // setFilterData(orderData);
     setDataLength(orderData.length);
   }, [orderData]);
   useEffect(() => {
@@ -210,7 +176,7 @@ export function MainSection() {
         </Text>
         <Group>
           <SearchBox onSearch={handleSearch} />
-          <FilterOrderData onDataReceived={onFilterData} />
+          <FilterOrderData onDataReceived={filterOrders} />
         </Group>
       </Flex>
       <Space h="lg" />

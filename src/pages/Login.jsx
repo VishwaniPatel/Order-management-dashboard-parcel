@@ -5,7 +5,7 @@ import { getUserData } from "../Service/OrderData";
 import { useNavigate } from "react-router-dom";
 import Logo from "../components/Logo";
 import * as Yup from "yup";
-import { useAuth } from "../components/ProductContext";
+import { useAuth } from "../context/ProductContext";
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Required"),
   password: Yup.string()
@@ -43,45 +43,11 @@ const LoginForm = () => {
   };
 
   useEffect(() => {
-    // if (localStorage.getItem("isAuthenticated")) {
-    //   initTimeout();
-    // }
-    // const sessionDuration = 1 * 60 * 1000; // 1 minute in milliseconds
-
-    // const handleUserInteraction = () => {
-    //   localStorage.setItem("LastInteraction", Date.now());
-
-    //   console.log("Working handleinteractin");
-    // };
-
-    // const checkSessionTimeout = () => {
-    //   const lastInteraction = localStorage.getItem("LastInteraction");
-    //   const currentTime = Date.now();
-    //   console.log("Working checkout");
-    //   if (currentTime - lastInteraction >= sessionDuration) {
-    //     logout();
-    //   }
-    // };
-
-    // const logout = () => {
-    //   localStorage.clear();
-    //   navigate("/login");
-    // };
-
-    // const initTimeout = () => {
-    //   document.addEventListener("mousemove", handleUserInteraction);
-    //   document.addEventListener("keydown", handleUserInteraction);
-    //   setInterval(checkSessionTimeout, 1000); // Check session timeout every second
-    //   console.log("Working inittimeout");
-    // };
-
     const getUser = async () => {
       await getUserData().then((res) => {
         setRegisteredData(res.data);
       });
     };
-
-    getUser();
   }, []);
 
   return (

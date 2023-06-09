@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useContext } from "react";
-import { ProductContext } from "./ProductContext";
+import { ProductContext } from "../context/ProductContext";
 import { Table, Text, Group, ActionIcon, Skeleton } from "@mantine/core";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
 import useProductData from "../hook/useProductData";

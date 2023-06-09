@@ -1,7 +1,7 @@
 import React from "react";
-import { AppShell, Navbar, Header, ScrollArea } from "@mantine/core";
-import { HeaderResponsive } from "./Header/Header";
-import { NavbarSimple } from "./NavBar";
+import { AppShell, Navbar, Header } from "@mantine/core";
+import { HeaderResponsive } from "../Layout/Header/Header";
+import { NavbarSimple } from "../Layout/Sidebar/NavBar";
 import { Outlet } from "react-router-dom";
 const AppShellUI = () => {
   return (
@@ -26,9 +26,7 @@ const AppShellUI = () => {
         },
       })}
     >
-      {/* <Navbar.Section grow component={ScrollArea} mx="-xs" px="xs"> */}
       <Outlet />
-      {/* </Navbar.Section> */}
     </AppShell>
   );
 };

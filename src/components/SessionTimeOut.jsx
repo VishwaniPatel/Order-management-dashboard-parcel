@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { useAuth } from "./ProductContext";
+import { useAuth } from "../context/ProductContext";
 import { useNavigate } from "react-router-dom";
 
 const SessionTimeout = () => {

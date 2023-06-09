@@ -8,7 +8,6 @@ import {
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { useForm, isNotEmpty } from "@mantine/form";
-import useInput from "./use-input";
 import { useEffect, useState, useContext } from "react";
 import {
   addOrderData,
@@ -16,7 +15,6 @@ import {
   patchOrderData,
 } from "../Service/OrderData";
 import { useParams, useNavigate } from "react-router-dom";
-import { ProductContext } from "./ProductContext.js";
 function AddOrderForm() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedValue, setSelectedOption] = useState(null);
@@ -64,16 +62,6 @@ function AddOrderForm() {
   const selectChangeHandler = (option) => {
     setSelectedOption(option);
   };
-  // const {
-  //   value: userNameValue,
-  //   valueChangeHandler: userNameChangeHandler,
-  //   reset: resetUserName,
-  // } = useInput();
-  // const {
-  //   value: priceValue,
-  //   valueChangeHandler: priceChangeHandler,
-  //   reset: resetPrice,
-  // } = useInput();
 
   const options = [
     { value: "Pending", label: "Pending" },
@@ -123,15 +111,6 @@ function AddOrderForm() {
     setPriceValue("");
     navigate("/");
   };
-  // const onChange = (e) => {
-  //   console.log("file", e?.target?.files[0]);
-  //   let file = e?.target?.files[0];
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onload = _handleReaderLoaded;
-  //     reader.readAsBinaryString(file);
-  //   }
-  // };
 
   const _handleReaderLoaded = (readerEvt) => {
     let binaryString = readerEvt.target.result;
@@ -153,9 +132,6 @@ function AddOrderForm() {
       reader.readAsDataURL(file);
     }
   };
-  // useEffect(() => {
-  //   getOrder();
-  // }, []);
   return (
     <Box maw={300} mx="auto">
       <form onSubmit={submitHandler}>

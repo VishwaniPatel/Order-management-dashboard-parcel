@@ -1,12 +1,12 @@
 import React from "react";
 
-import Routing from "./components/Routing";
 import SessionTimeout from "./components/SessionTimeOut";
-import { AuthProvider } from "./components/ProductContext";
+import { AuthProvider } from "./context/ProductContext";
+import RoutingPaths from "./Routing/Routing";
 function App() {
   return (
     <AuthProvider>
-      <Routing />
+      <RoutingPaths />
       <SessionTimeout />
     </AuthProvider>
   );
